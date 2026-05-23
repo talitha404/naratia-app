@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 🔥 List halaman utama
   final List<Widget> _screens = const [
-    HomeContent(),        // Beranda (dipisah)
+    HomeContent(),
     LibraryScreen(),
     SearchScreen(),
     WriteHubScreen(),
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   // 🔥 Judul AppBar
-  final List<String> _titles = [
+  final List<String> _titles = const [
     'Naratia',
     'Perpustakaan',
     'Cari',
@@ -38,6 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF121212), // ✅ tambahan
+
       // ================= APPBAR =================
       appBar: AppBar(
         backgroundColor: const Color(0xFF121212),
