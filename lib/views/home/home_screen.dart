@@ -1,32 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-void main() {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-  ));
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        // Latar belakang gelap sesuai dengan desain Proyek Naratia
-        scaffoldBackgroundColor: const Color(0xFF121212),
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
+// 🔥 Import semua halaman
+import 'home_content.dart';
+import '../library/library_screen.dart';
+import '../search/search_screen.dart';
+import '../write/write_hub_screen.dart';
+import '../profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -35,45 +17,64 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
+  // 🔥 List halaman utama
+  final List<Widget> _screens = const [
+    HomeContent(),        // Beranda (dipisah)
+    LibraryScreen(),
+    SearchScreen(),
+    WriteHubScreen(),
+    ProfileScreen(),
+  ];
+
+  // 🔥 Judul AppBar
+  final List<String> _titles = [
+    'Naratia',
+    'Perpustakaan',
+    'Cari',
+    'Tulis',
+    'Profil',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 1. HEADER (AppBar)
+      // ================= APPBAR =================
       appBar: AppBar(
         backgroundColor: const Color(0xFF121212),
         elevation: 0,
-        title: const Text(
-          'Naratia',
-          style: TextStyle(
-            fontFamily: 'Serif', 
-            fontSize: 24,
+        title: Text(
+          _titles[_currentIndex],
+          style: const TextStyle(
+            fontFamily: 'Serif',
+            fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Colors.purple, // Warna ungu khas Naratia
+            color: Colors.purple,
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none_outlined, color: Colors.white),
-            onPressed: () {
-              // Aksi ketika ikon notifikasi ditekan
-            },
-          ),
-          const SizedBox(width: 8),
+          if (_currentIndex == 0)
+            IconButton(
+              icon: const Icon(
+                Icons.notifications_none_outlined,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                // TODO: Notifikasi
+              },
+            ),
         ],
       ),
 
-      // Tempat untuk konten utama (sesuai permintaan, dikosongkan/placeholder dulu)
-      body: const Center(
-        child: Text(
-          'Konten Beranda Utama',
-          style: TextStyle(color: Colors.grey),
-        ),
+      // ================= BODY =================
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
       ),
 
-      // 2. NAVBAR BAWAH (BottomNavigationBar)
+      // ================= BOTTOM NAV =================
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          canvasColor: const Color(0xFF6A0DAD), // Warna ungu dasar navbar Anda
+          canvasColor: const Color(0xFF6A0DAD),
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
@@ -85,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white60,
-          showSelectedLabels: false, // Hanya menampilkan ikon seperti di Figma
+          showSelectedLabels: false,
           showUnselectedLabels: false,
           items: const [
             BottomNavigationBarItem(
@@ -94,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.book_outlined),
-              label: 'Perpustakaan',
+              label: 'Library',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
