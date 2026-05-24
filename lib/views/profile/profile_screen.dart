@@ -47,6 +47,68 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
+            const SizedBox(height: 24),
+
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: const [
+
+    Column(
+      children: [
+        Text(
+          '120',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'Stories',
+          style: TextStyle(color: Colors.white70),
+        ),
+      ],
+    ),
+
+    Column(
+      children: [
+        Text(
+          '2.5K',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'Followers',
+          style: TextStyle(color: Colors.white70),
+        ),
+      ],
+    ),
+
+    Column(
+      children: [
+        Text(
+          '180',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'Following',
+          style: TextStyle(color: Colors.white70),
+        ),
+      ],
+    ),
+  ],
+),
+
             // EDIT PROFILE BUTTON
             SizedBox(
               width: double.infinity,
