@@ -5,10 +5,159 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Profile',
-        style: TextStyle(color: Colors.white),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+
+        child: Column(
+          children: [
+
+            // PROFILE IMAGE
+            const CircleAvatar(
+              radius: 50,
+              backgroundColor: Colors.purple,
+              child: Icon(
+                Icons.person,
+                size: 50,
+                color: Colors.white,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // USERNAME
+            const Text(
+              'Elina',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // EMAIL
+            const Text(
+              'elina@gmail.com',
+              style: TextStyle(
+                color: Colors.white70,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // EDIT PROFILE BUTTON
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                onPressed: () {},
+                child: const Text(
+                  'Edit Profile',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // MENU LIST
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E1E1E),
+                borderRadius: BorderRadius.circular(16),
+              ),
+
+              child: Column(
+                children: [
+
+                  ListTile(
+                    leading: const Icon(
+                      Icons.bookmark_border,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      'Saved Stories',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white54,
+                      size: 16,
+                    ),
+                    onTap: () {},
+                  ),
+
+                  const Divider(color: Colors.white12),
+
+                  ListTile(
+                    leading: const Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      'Settings',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white54,
+                      size: 16,
+                    ),
+                    onTap: () {},
+                  ),
+
+                  const Divider(color: Colors.white12),
+
+                  ListTile(
+                    leading: const Icon(
+                      Icons.help_outline,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      'Help Center',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white54,
+                      size: 16,
+                    ),
+                    onTap: () {},
+                  ),
+
+                  const Divider(color: Colors.white12),
+
+                  ListTile(
+                    leading: const Icon(
+                      Icons.logout,
+                      color: Colors.redAccent,
+                    ),
+                    title: const Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white54,
+                      size: 16,
+                    ),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
