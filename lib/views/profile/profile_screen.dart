@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'edit_profile_screen.dart';
+import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -47,83 +49,97 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            const SizedBox(height: 24),
+            // USER STATS
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
 
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: const [
+                Column(
+                  children: [
+                    Text(
+                      '120',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Stories',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ],
+                ),
 
-    Column(
-      children: [
-        Text(
-          '120',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          'Stories',
-          style: TextStyle(color: Colors.white70),
-        ),
-      ],
-    ),
+                Column(
+                  children: [
+                    Text(
+                      '2.5K',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Followers',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ],
+                ),
 
-    Column(
-      children: [
-        Text(
-          '2.5K',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          'Followers',
-          style: TextStyle(color: Colors.white70),
-        ),
-      ],
-    ),
+                Column(
+                  children: [
+                    Text(
+                      '180',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Following',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ],
+                ),
+              ],
+            ),
 
-    Column(
-      children: [
-        Text(
-          '180',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          'Following',
-          style: TextStyle(color: Colors.white70),
-        ),
-      ],
-    ),
-  ],
-),
+            const SizedBox(height: 32),
 
             // EDIT PROFILE BUTTON
             SizedBox(
               width: double.infinity,
+
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                   padding: const EdgeInsets.symmetric(vertical: 14),
+
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                onPressed: () {},
+
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EditProfileScreen(),
+                    ),
+                  );
+                },
+
                 child: const Text(
                   'Edit Profile',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -140,79 +156,102 @@ Row(
               child: Column(
                 children: [
 
+                  // SAVED STORIES
                   ListTile(
                     leading: const Icon(
                       Icons.bookmark_border,
                       color: Colors.white,
                     ),
+
                     title: const Text(
                       'Saved Stories',
                       style: TextStyle(color: Colors.white),
                     ),
+
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white54,
                       size: 16,
                     ),
+
                     onTap: () {},
                   ),
 
                   const Divider(color: Colors.white12),
 
+                  // SETTINGS
                   ListTile(
                     leading: const Icon(
                       Icons.settings,
                       color: Colors.white,
                     ),
+
                     title: const Text(
                       'Settings',
                       style: TextStyle(color: Colors.white),
                     ),
+
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white54,
                       size: 16,
                     ),
-                    onTap: () {},
+
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SettingsScreen(),
+                        ),
+                      );
+                    },
                   ),
 
                   const Divider(color: Colors.white12),
 
+                  // HELP CENTER
                   ListTile(
                     leading: const Icon(
                       Icons.help_outline,
                       color: Colors.white,
                     ),
+
                     title: const Text(
                       'Help Center',
                       style: TextStyle(color: Colors.white),
                     ),
+
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white54,
                       size: 16,
                     ),
+
                     onTap: () {},
                   ),
 
                   const Divider(color: Colors.white12),
 
+                  // LOGOUT
                   ListTile(
                     leading: const Icon(
                       Icons.logout,
                       color: Colors.redAccent,
                     ),
+
                     title: const Text(
                       'Logout',
                       style: TextStyle(
                         color: Colors.redAccent,
                       ),
                     ),
+
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white54,
                       size: 16,
                     ),
+
                     onTap: () {},
                   ),
                 ],
