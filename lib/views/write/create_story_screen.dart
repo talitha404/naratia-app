@@ -1,6 +1,6 @@
 // isi metadata cerita
-// belum git add
 import 'package:flutter/material.dart';
+import 'editor_screen.dart';
 
 class CreateStoryScreen extends StatefulWidget {
   const CreateStoryScreen({super.key});
@@ -232,7 +232,11 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
         ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            // Lanjutkan ke Editor
+            // Logika untuk menyimpan data cerita dan lanjut ke EditorScreen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const EditorScreen()),
+            );
           }
         },
         child: const Text(
