@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../viewmodels/profile_viewmodel.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<ProfileViewModel>().loadUsername();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +46,19 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // USERNAME
-            const Text(
-              'Elina',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+            Consumer<ProfileViewModel>(
+  builder: (context, profileVM, child) {
 
+    return Text(
+      profileVM.username,
+      style: const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  },
+),
             const SizedBox(height: 8),
 
             // EMAIL
