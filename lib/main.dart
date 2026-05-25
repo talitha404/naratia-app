@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'views/splash/splash_screen.dart';
+import 'viewmodels/profile_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,12 +13,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Naratia', // bisa diganti sesuai nama proyekmu
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return ChangeNotifierProvider(
+      create: (_) => ProfileViewModel(),
+
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+
+        title: 'Naratia',
+
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+          ),
+        ),
+
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }
