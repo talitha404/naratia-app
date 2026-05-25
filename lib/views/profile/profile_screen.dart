@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';
+import 'saved_stories_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -201,7 +202,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       size: 16,
                     ),
 
-                    onTap: () {},
+                    onTap: () {
+
+  Navigator.push(
+    context,
+
+    MaterialPageRoute(
+      builder: (_) =>
+          const SavedStoriesScreen(),
+    ),
+  );
+},
                   ),
 
                   const Divider(color: Colors.white12),
