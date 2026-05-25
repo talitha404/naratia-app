@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'views/splash/splash_screen.dart';
+
 import 'viewmodels/profile_viewmodel.dart';
+import 'viewmodels/bookmark_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +15,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ProfileViewModel(),
+
+    return MultiProvider(
+
+      providers: [
+
+        ChangeNotifierProvider(
+          create: (_) => ProfileViewModel(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => BookmarkViewModel(),
+        ),
+      ],
 
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
