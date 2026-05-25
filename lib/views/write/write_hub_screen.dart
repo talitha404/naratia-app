@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'create_story_screen.dart';
 
 class WriteHubScreen extends StatelessWidget {
   const WriteHubScreen({super.key});
@@ -20,7 +21,14 @@ class WriteHubScreen extends StatelessWidget {
               icon: Icons.note_add_outlined,
               title: 'Buat Cerita Baru',
               subtitle: 'Mulai Tulis Cerita Baru',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateStoryScreen(),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: 20),
