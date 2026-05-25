@@ -6,6 +6,7 @@ import '../library/library_screen.dart';
 import '../search/search_screen.dart';
 import '../write/write_hub_screen.dart';
 import '../profile/profile_screen.dart';
+import '../notification/notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -61,8 +62,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white,
               ),
               onPressed: () {
-                // TODO: Notifikasi
-              },
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const NotificationScreen(),
+    ),
+  );
+},
             ),
         ],
       ),
