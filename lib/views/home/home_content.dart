@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../viewmodels/bookmark_viewmodel.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
@@ -34,6 +37,8 @@ class HomeContent extends StatelessWidget {
             ),
 
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+
               children: [
 
                 // BOOK COVER
@@ -126,6 +131,50 @@ class HomeContent extends StatelessWidget {
                           ),
                         ],
                       ),
+
+                      const SizedBox(height: 20),
+
+                      // BOOKMARK BUTTON
+                      Align(
+                        alignment: Alignment.centerLeft,
+
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.purple,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+
+                          child: IconButton(
+
+                            icon: const Icon(
+                              Icons.bookmark,
+                              color: Colors.white,
+                            ),
+
+                            onPressed: () async {
+
+                              await context
+                                  .read<BookmarkViewModel>()
+                                  .addBookmark(
+                                    'What Should Be Wild',
+                                  );
+
+                              if (context.mounted) {
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+
+                                  const SnackBar(
+                                    content: Text(
+                                      'Story saved!',
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -148,9 +197,9 @@ class HomeContent extends StatelessWidget {
           const SizedBox(height: 16),
 
           SizedBox(
-  height: 210,
+            height: 210,
 
-  child: ListView(
+            child: ListView(
               scrollDirection: Axis.horizontal,
 
               children: [
