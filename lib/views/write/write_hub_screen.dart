@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'create_story_screen.dart';
+import 'draft_list_screen.dart';
+import 'published_list_screen.dart';
 
 class WriteHubScreen extends StatelessWidget {
   const WriteHubScreen({super.key});
@@ -20,7 +23,14 @@ class WriteHubScreen extends StatelessWidget {
               icon: Icons.note_add_outlined,
               title: 'Buat Cerita Baru',
               subtitle: 'Mulai Tulis Cerita Baru',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateStoryScreen(),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: 20),
@@ -31,7 +41,14 @@ class WriteHubScreen extends StatelessWidget {
               icon: Icons.insert_drive_file_outlined,
               title: 'Draf Cerita',
               subtitle: 'Kelola dan Lanjutkan Draf Anda',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DraftListScreen(),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: 20),
@@ -42,7 +59,14 @@ class WriteHubScreen extends StatelessWidget {
               icon: Icons.cloud_done_outlined,
               title: 'Cerita Terpublikasi',
               subtitle: 'Lihat Karya yang Sudah Rilis',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PublishedListScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
