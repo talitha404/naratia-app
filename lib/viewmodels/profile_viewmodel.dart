@@ -7,13 +7,22 @@ class ProfileViewModel extends ChangeNotifier {
 
   String get username => _username;
 
-  Future<void> loadUsername() async {
-    final prefs = await SharedPreferences.getInstance();
+  String _email = 'elina@gmail.com';
 
-    _username = prefs.getString('username') ?? 'Elina';
+  String get email => _email;
 
-    notifyListeners();
-  }
+Future<void> loadUsername() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  _username =
+      prefs.getString('username') ?? 'Elina';
+
+  _email =
+      prefs.getString('email') ??
+      'elina@gmail.com';
+
+  notifyListeners();
+}
 
   Future<void> saveUsername(String name) async {
     final prefs = await SharedPreferences.getInstance();
@@ -24,4 +33,16 @@ class ProfileViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> saveEmail(String email) async {
+
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  await prefs.setString('email', email);
+
+  _email = email;
+
+  notifyListeners();
+}
 }

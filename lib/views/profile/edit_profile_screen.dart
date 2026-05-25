@@ -18,6 +18,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController bioController =
       TextEditingController();
 
+  final TextEditingController emailController =
+    TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +32,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         );
 
     usernameController.text = profileVM.username;
+    emailController.text = profileVM.email;
   }
 
   @override
@@ -94,6 +98,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             const SizedBox(height: 16),
 
+TextField(
+  controller: emailController,
+
+  style: const TextStyle(
+    color: Colors.white,
+  ),
+
+  decoration: InputDecoration(
+    labelText: 'Email',
+
+    labelStyle: const TextStyle(
+      color: Colors.white70,
+    ),
+
+    filled: true,
+    fillColor: const Color(0xFF1E1E1E),
+
+    border: OutlineInputBorder(
+      borderRadius:
+          BorderRadius.circular(14),
+    ),
+  ),
+),
+
             // BIO FIELD
             TextField(
               controller: bioController,
@@ -142,6 +170,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   await profileVM.saveUsername(
                     usernameController.text,
                   );
+
+                  await profileVM.saveEmail(
+  emailController.text,
+);
 
                   if (context.mounted) {
 

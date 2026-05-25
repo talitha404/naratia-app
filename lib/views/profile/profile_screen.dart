@@ -62,12 +62,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 8),
 
             // EMAIL
-            const Text(
-              'elina@gmail.com',
-              style: TextStyle(
-                color: Colors.white70,
-              ),
-            ),
+            Consumer<ProfileViewModel>(
+  builder: (context, profileVM, child) {
+
+    return Text(
+      profileVM.email,
+      style: const TextStyle(
+        color: Colors.white70,
+      ),
+    );
+  },
+),
 
             const SizedBox(height: 24),
 
