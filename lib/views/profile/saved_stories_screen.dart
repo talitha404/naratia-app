@@ -24,15 +24,6 @@ void initState() {
         context.read<BookmarkViewModel>();
 
     await bookmarkVM.loadBookmarks();
-
-    // DUMMY TEST
-    await bookmarkVM.addBookmark(
-      'What Should Be Wild',
-    );
-
-    await bookmarkVM.addBookmark(
-      'A Study in Drowning',
-    );
   });
 }
 
