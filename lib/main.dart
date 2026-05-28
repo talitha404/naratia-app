@@ -5,6 +5,7 @@ import 'views/splash/splash_screen.dart';
 
 import 'viewmodels/profile_viewmodel.dart';
 import 'viewmodels/bookmark_viewmodel.dart';
+import 'viewmodels/library_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +27,10 @@ class MyApp extends StatelessWidget {
 
         ChangeNotifierProvider(
           create: (_) => BookmarkViewModel(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => LibraryViewModel(),
         ),
       ],
 
