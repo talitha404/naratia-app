@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/search_viewmodel.dart';
+import '../../views/notification/notification_screen.dart'; 
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -80,7 +81,6 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         Row(
           children: [
-            // Tombol Back Baru
             if (viewModel.currentState != SearchState.initial)
               IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22), 
@@ -98,16 +98,21 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ],
         ),
-        Row(
-          children: [
-            IconButton(icon: const Icon(Icons.search, color: Colors.white, size: 22), onPressed: () {}),
-            IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white, size: 22), onPressed: () {}),
-          ],
-        )
+        // Ikon search sudah dihapus, tinggal notifikasi saja
+        IconButton(
+          icon: const Icon(Icons.notifications_none, color: Colors.white, size: 22), 
+          onPressed: () {
+            // Arahkan ke NotificationScreen saat diklik
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const NotificationScreen()),
+            );
+          }
+        ),
       ],
     );
   }
-
+  
   Widget _buildSearchBar(SearchViewModel viewModel) {
     return Container(
       decoration: BoxDecoration(
