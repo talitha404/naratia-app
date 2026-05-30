@@ -7,6 +7,8 @@ import '../search/search_screen.dart';
 import '../write/write_hub_screen.dart';
 import '../profile/profile_screen.dart';
 import '../notification/notification_screen.dart';
+import 'package:provider/provider.dart';
+import '../../viewmodels/search_viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,36 +44,38 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color(0xFF121212), // ✅ tambahan
 
       // ================= APPBAR =================
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
-        elevation: 0,
-        title: Text(
-          _titles[_currentIndex],
-          style: const TextStyle(
-            fontFamily: 'Serif',
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.purple,
-          ),
-        ),
-        actions: [
-          if (_currentIndex == 0)
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none_outlined,
-                color: Colors.white,
+      appBar: _currentIndex == 2 
+          ? null 
+          : AppBar(
+              backgroundColor: const Color(0xFF121212),
+              elevation: 0,
+              title: Text(
+                _titles[_currentIndex],
+                style: const TextStyle(
+                  fontFamily: 'Serif',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
+                ),
               ),
-              onPressed: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => const NotificationScreen(),
-    ),
-  );
-},
+              actions: [
+                if (_currentIndex == 0)
+                  IconButton(
+                    icon: const Icon(
+                      Icons.notifications_none_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const NotificationScreen(),
+                        ),
+                      );
+                    },
+                  ),
+              ],
             ),
-        ],
-      ),
 
       // ================= BODY =================
       body: IndexedStack(
@@ -87,6 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
+            // Jika user sudah di halaman Cari (indeks 2) dan menekan tombol Cari lagi
+            if (_currentIndex == 2 && index == 2) {
+              context.read<SearchViewModel>().resetSearch();
+            }
+            
             setState(() {
               _currentIndex = index;
             });
