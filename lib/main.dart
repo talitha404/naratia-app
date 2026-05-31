@@ -7,6 +7,7 @@ import 'viewmodels/bookmark_viewmodel.dart';
 import 'viewmodels/library_viewmodel.dart';
 import 'viewmodels/search_viewmodel.dart'; // Ini baris yang baru ditambahkan
 import 'viewmodels/auth_viewmodel.dart';
+import 'views/auth/welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,13 +45,12 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.deepPurple,
           ),
         ),
-
-        // ⬇️ TAMBAHKAN INI
+        initialRoute: '/',
         routes: {
+          '/': (context) => const SplashScreen(),
+          '/welcome': (context) => WelcomeScreen(),
           '/home': (context) => const HomeScreen(),
         },
-
-        home: const SplashScreen(),
       ),
     );
   }
