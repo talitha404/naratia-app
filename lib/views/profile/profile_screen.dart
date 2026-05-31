@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../viewmodels/profile_viewmodel.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';
 import 'saved_stories_screen.dart';
+import 'package:provider/provider.dart';
+import '../../viewmodels/auth_viewmodel.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -48,32 +49,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // USERNAME
             Consumer<ProfileViewModel>(
-  builder: (context, profileVM, child) {
+              builder: (context, profileVM, child) {
 
-    return Text(
-      profileVM.username,
-      style: const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-  },
-),
+                return Text(
+                  profileVM.username,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 8),
 
             // EMAIL
             Consumer<ProfileViewModel>(
-  builder: (context, profileVM, child) {
+              builder: (context, profileVM, child) {
 
-    return Text(
-      profileVM.email,
-      style: const TextStyle(
-        color: Colors.white70,
-      ),
-    );
-  },
-),
+                return Text(
+                  profileVM.email,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                  ),
+                );
+              },
+            ),
 
             const SizedBox(height: 24),
 
@@ -184,39 +185,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
 
-                  // SAVED STORIES
-                  ListTile(
-                    leading: const Icon(
-                      Icons.bookmark_border,
-                      color: Colors.white,
-                    ),
-
-                    title: const Text(
-                      'Saved Stories',
-                      style: TextStyle(color: Colors.white),
-                    ),
-
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white54,
-                      size: 16,
-                    ),
-
-                    onTap: () {
-
-  Navigator.push(
-    context,
-
-    MaterialPageRoute(
-      builder: (_) =>
-          const SavedStoriesScreen(),
-    ),
-  );
-},
-                  ),
-
-                  const Divider(color: Colors.white12),
-
                   // SETTINGS
                   ListTile(
                     leading: const Icon(
@@ -269,28 +237,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
 
                   const Divider(color: Colors.white12),
-
                   // LOGOUT
                   ListTile(
                     leading: const Icon(
                       Icons.logout,
                       color: Colors.redAccent,
                     ),
-
                     title: const Text(
                       'Logout',
                       style: TextStyle(
                         color: Colors.redAccent,
                       ),
                     ),
-
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white54,
                       size: 16,
                     ),
+                    onTap: () async {
+                      final authViewModel =
+                          Provider.of<AuthViewModel>(context, listen: false);
+                      await authViewModel.logout();
 
-                    onTap: () {},
+                      if (context.mounted) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/welcome',
+                          (route) => false,
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
