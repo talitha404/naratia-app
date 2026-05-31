@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../viewmodels/profile_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import 'edit_profile_screen.dart';
-import 'settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -159,94 +158,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 32),
 
             Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(
-                      Icons.settings,
-                      color: Colors.white,
-                    ),
-                    title: const Text(
-                      'Pengaturan',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white54,
-                      size: 16,
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const SettingsScreen(),
-                        ),
-                      );
-                    },
-                  ),
+  decoration: BoxDecoration(
+    color: const Color(0xFF1E1E1E),
+    borderRadius: BorderRadius.circular(16),
+  ),
+  child: Column(
+    children: [
 
-                  const Divider(color: Colors.white12),
+      ListTile(
+        leading: const Icon(
+          Icons.help_outline,
+          color: Colors.white,
+        ),
+        title: const Text(
+          'Pusat Bantuan',
+          style: TextStyle(color: Colors.white),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.white54,
+          size: 16,
+        ),
+        onTap: () {},
+      ),
 
-                  ListTile(
-                    leading: const Icon(
-                      Icons.help_outline,
-                      color: Colors.white,
-                    ),
-                    title: const Text(
-                      'Pusat Bantuan',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white54,
-                      size: 16,
-                    ),
-                    onTap: () {},
-                  ),
+      const Divider(color: Colors.white12),
 
-                  const Divider(color: Colors.white12),
+      ListTile(
+        leading: const Icon(
+          Icons.logout,
+          color: Colors.redAccent,
+        ),
+        title: const Text(
+          'Keluar',
+          style: TextStyle(
+            color: Colors.redAccent,
+          ),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          color: Colors.white54,
+          size: 16,
+        ),
+        onTap: () async {
+          final authViewModel =
+              Provider.of<AuthViewModel>(
+            context,
+            listen: false,
+          );
 
-                  ListTile(
-                    leading: const Icon(
-                      Icons.logout,
-                      color: Colors.redAccent,
-                    ),
-                    title: const Text(
-                      'Keluar',
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                      ),
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white54,
-                      size: 16,
-                    ),
-                    onTap: () async {
-                      final authViewModel =
-                          Provider.of<AuthViewModel>(
-                        context,
-                        listen: false,
-                      );
+          await authViewModel.logout();
 
-                      await authViewModel.logout();
-
-                      if (context.mounted) {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          '/welcome',
-                          (route) => false,
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
+          if (context.mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/welcome',
+              (route) => false,
+            );
+          }
+        },
+      ),
+    ],
+  ),
+),
           ],
         ),
       ),
