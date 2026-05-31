@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../viewmodels/profile_viewmodel.dart';
+import '../../viewmodels/auth_viewmodel.dart';
 import 'edit_profile_screen.dart';
 import 'settings_screen.dart';
-import 'saved_stories_screen.dart';
-import 'package:provider/provider.dart';
-import '../../viewmodels/auth_viewmodel.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,7 +14,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -30,11 +28,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20),
-
         child: Column(
           children: [
-
-            // PROFILE IMAGE
             const CircleAvatar(
               radius: 50,
               backgroundColor: Colors.purple,
@@ -47,10 +42,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 16),
 
-            // USERNAME
             Consumer<ProfileViewModel>(
               builder: (context, profileVM, child) {
-
                 return Text(
                   profileVM.username,
                   style: const TextStyle(
@@ -61,12 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
             ),
+
             const SizedBox(height: 8),
 
-            // EMAIL
             Consumer<ProfileViewModel>(
               builder: (context, profileVM, child) {
-
                 return Text(
                   profileVM.email,
                   style: const TextStyle(
@@ -78,11 +70,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 24),
 
-            // USER STATS
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: const [
-
                 Column(
                   children: [
                     Text(
@@ -95,12 +85,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Stories',
+                      'Cerita',
                       style: TextStyle(color: Colors.white70),
                     ),
                   ],
                 ),
-
                 Column(
                   children: [
                     Text(
@@ -113,12 +102,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Followers',
+                      'Pengikut',
                       style: TextStyle(color: Colors.white70),
                     ),
                   ],
                 ),
-
                 Column(
                   children: [
                     Text(
@@ -131,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Following',
+                      'Mengikuti',
                       style: TextStyle(color: Colors.white70),
                     ),
                   ],
@@ -141,20 +129,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 32),
 
-            // EDIT PROFILE BUTTON
             SizedBox(
               width: double.infinity,
-
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -163,9 +147,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 },
-
                 child: const Text(
-                  'Edit Profile',
+                  'Edit Profil',
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -175,34 +158,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 32),
 
-            // MENU LIST
             Container(
               decoration: BoxDecoration(
                 color: const Color(0xFF1E1E1E),
                 borderRadius: BorderRadius.circular(16),
               ),
-
               child: Column(
                 children: [
-
-                  // SETTINGS
                   ListTile(
                     leading: const Icon(
                       Icons.settings,
                       color: Colors.white,
                     ),
-
                     title: const Text(
-                      'Settings',
+                      'Pengaturan',
                       style: TextStyle(color: Colors.white),
                     ),
-
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white54,
                       size: 16,
                     ),
-
                     onTap: () {
                       Navigator.push(
                         context,
@@ -215,36 +191,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const Divider(color: Colors.white12),
 
-                  // HELP CENTER
                   ListTile(
                     leading: const Icon(
                       Icons.help_outline,
                       color: Colors.white,
                     ),
-
                     title: const Text(
-                      'Help Center',
+                      'Pusat Bantuan',
                       style: TextStyle(color: Colors.white),
                     ),
-
                     trailing: const Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white54,
                       size: 16,
                     ),
-
                     onTap: () {},
                   ),
 
                   const Divider(color: Colors.white12),
-                  // LOGOUT
+
                   ListTile(
                     leading: const Icon(
                       Icons.logout,
                       color: Colors.redAccent,
                     ),
                     title: const Text(
-                      'Logout',
+                      'Keluar',
                       style: TextStyle(
                         color: Colors.redAccent,
                       ),
@@ -256,7 +228,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     onTap: () async {
                       final authViewModel =
-                          Provider.of<AuthViewModel>(context, listen: false);
+                          Provider.of<AuthViewModel>(
+                        context,
+                        listen: false,
+                      );
+
                       await authViewModel.logout();
 
                       if (context.mounted) {

@@ -10,7 +10,15 @@ class SettingsScreen extends StatelessWidget {
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF121212),
-        title: const Text("Settings"),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: const Text(
+          'Pengaturan',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
       ),
 
       body: ListView(
@@ -22,8 +30,10 @@ class SettingsScreen extends StatelessWidget {
               color: Colors.white,
             ),
             title: const Text(
-              'Dark Mode',
-              style: TextStyle(color: Colors.white),
+              'Mode Gelap',
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
             trailing: Switch(
               value: true,
@@ -37,8 +47,10 @@ class SettingsScreen extends StatelessWidget {
               color: Colors.white,
             ),
             title: const Text(
-              'Notifications',
-              style: TextStyle(color: Colors.white),
+              'Notifikasi',
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
             trailing: Switch(
               value: true,
@@ -52,10 +64,12 @@ class SettingsScreen extends StatelessWidget {
               color: Colors.white,
             ),
             title: const Text(
-              'Privacy',
-              style: TextStyle(color: Colors.white),
+              'Privasi',
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
-            trailing: Icon(
+            trailing: const Icon(
               Icons.arrow_forward_ios,
               color: Colors.white54,
               size: 16,

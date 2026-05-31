@@ -21,6 +21,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController emailController =
     TextEditingController();
 
+  final TextEditingController characterController =
+    TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -45,12 +48,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: const Color(0xFF121212),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
+  backgroundColor: const Color(0xFF121212),
 
-        title: const Text(
-          "Edit Profile",
-        ),
-      ),
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+
+  title: const Text(
+    'Edit Profil',
+    style: TextStyle(
+      color: Colors.white,
+    ),
+  ),
+),
 
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -99,6 +109,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             const SizedBox(height: 16),
 
 TextField(
+  controller: characterController,
+
+  style: const TextStyle(
+    color: Colors.white,
+  ),
+
+  decoration: InputDecoration(
+    labelText: 'Nama Karakter',
+
+    labelStyle: const TextStyle(
+      color: Colors.white70,
+    ),
+
+    filled: true,
+    fillColor: const Color(0xFF1E1E1E),
+
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+    ),
+  ),
+),
+
+            const SizedBox(height: 16),
+
+TextField(
   controller: emailController,
 
   style: const TextStyle(
@@ -121,6 +156,8 @@ TextField(
     ),
   ),
 ),
+
+const SizedBox(height: 16),
 
             // BIO FIELD
             TextField(
@@ -191,7 +228,7 @@ TextField(
                 },
 
                 child: const Text(
-                  'Save Changes',
+                  'Simpan Perubahan',
 
                   style: TextStyle(
                     color: Colors.white,

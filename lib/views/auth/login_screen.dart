@@ -55,8 +55,17 @@ class _LoginScreenState extends State<LoginScreen> {
     final vm = Provider.of<AuthViewModel>(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E1E),
-      body: SafeArea(
+  backgroundColor: const Color(0xFF1E1E1E),
+
+  appBar: AppBar(
+    backgroundColor: const Color(0xFF1E1E1E),
+    elevation: 0,
+    iconTheme: const IconThemeData(
+      color: Colors.white,
+    ),
+  ),
+
+  body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),

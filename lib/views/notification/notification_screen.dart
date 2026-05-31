@@ -9,17 +9,20 @@ class NotificationScreen extends StatelessWidget {
       backgroundColor: const Color(0xFF121212),
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
-        elevation: 0,
+  backgroundColor: const Color(0xFF121212),
 
-        title: const Text(
-          'Notifications',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+
+  title: const Text(
+    'Notifications',
+    style: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
 
       body: ListView(
         padding: const EdgeInsets.all(16),
