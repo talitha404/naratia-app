@@ -20,7 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
 
     Future.microtask(() {
-      context.read<ProfileViewModel>().loadUsername();
+      context.read<ProfileViewModel>().loadUser();
     });
   }
 

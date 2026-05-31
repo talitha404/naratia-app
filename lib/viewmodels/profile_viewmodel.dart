@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart';
 
 class ProfileViewModel extends ChangeNotifier {
 
@@ -11,18 +12,18 @@ class ProfileViewModel extends ChangeNotifier {
 
   String get email => _email;
 
-Future<void> loadUsername() async {
-  final prefs = await SharedPreferences.getInstance();
+  Future<void> loadUser() async {
+    final data = await ApiService.getUser();
 
-  _username =
-      prefs.getString('username') ?? 'Elina';
+    if (data != null) {
+      _username = data['username'];
+      _email = data['email'];
 
-  _email =
-      prefs.getString('email') ??
-      'elina@gmail.com';
-
-  notifyListeners();
-}
+      notifyListeners();
+    } else {
+      print('Gagal ambil user (unauthorized / token salah)');
+    }
+  }
 
   Future<void> saveUsername(String name) async {
     final prefs = await SharedPreferences.getInstance();
