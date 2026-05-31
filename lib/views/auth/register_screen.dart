@@ -9,8 +9,11 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _emailController = TextEditingController(text: 'cathleyaaa.s21@gmail.com');
-  final _passwordController = TextEditingController(text: 'akunmembaca123');
+  final _emailController =
+      TextEditingController(text: 'cathleyaaa.s21@gmail.com');
+
+  final _passwordController =
+      TextEditingController(text: 'akunmembaca123');
 
   @override
   void dispose() {
@@ -22,26 +25,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E1E), // Sesuai dengan warna Fill di Figma
+      backgroundColor: const Color(0xFF1E1E1E),
+
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E1E1E),
+        elevation: 0,
+
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+      ),
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+
             children: [
-              const SizedBox(height: 60),
-              // Judul Halaman
+              const SizedBox(height: 20),
+
               const Text(
-                'Daftar akun',
+                'Daftar Akun',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
               const SizedBox(height: 40),
-              
-              // Input Email
+
+              // EMAIL
               const Text(
                 'Email',
                 style: TextStyle(
@@ -49,25 +65,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   fontSize: 14,
                 ),
               ),
+
               const SizedBox(height: 8),
+
               TextFormField(
                 controller: _emailController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.white60),
+
+                    borderSide: const BorderSide(
+                      color: Colors.white60,
+                    ),
                   ),
+
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFF7B2CBF)), // Warna ungu figma
+
+                    borderSide: const BorderSide(
+                      color: Color(0xFF7B2CBF),
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 24),
 
-              // Input Kata Sandi
+              // PASSWORD
               const Text(
                 'Kata Sandi',
                 style: TextStyle(
@@ -75,29 +109,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   fontSize: 14,
                 ),
               ),
+
               const SizedBox(height: 8),
+
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
-                style: const TextStyle(color: Colors.white),
+
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFF7B2CBF)), // Border ungu sesuai gambar
+
+                    borderSide: const BorderSide(
+                      color: Color(0xFF7B2CBF),
+                    ),
                   ),
+
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFF7B2CBF), width: 2),
+
+                    borderSide: const BorderSide(
+                      color: Color(0xFF7B2CBF),
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 40),
 
-              // Tombol Daftar
+              // BUTTON DAFTAR
               SizedBox(
                 width: double.infinity,
                 height: 48,
+
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -107,12 +161,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     );
                   },
+
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF7B2CBF), // Warna tombol ungu murni
+                    backgroundColor: const Color(0xFF7B2CBF),
+
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
+
                   child: const Text(
                     'Daftar',
                     style: TextStyle(

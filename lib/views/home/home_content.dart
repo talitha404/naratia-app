@@ -10,15 +10,12 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
-
-          // ================= FEATURED STORY =================
+          // ================= CERITA UNGGULAN =================
           const Text(
-            'Featured Story',
+            'Cerita Unggulan',
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -30,27 +27,21 @@ class HomeContent extends StatelessWidget {
 
           Container(
             padding: const EdgeInsets.all(16),
-
             decoration: BoxDecoration(
               color: const Color(0xFF1E1E1E),
               borderRadius: BorderRadius.circular(20),
             ),
-
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
-
-                // BOOK COVER
+                // COVER BUKU
                 Container(
                   width: 100,
                   height: 150,
-
                   decoration: BoxDecoration(
                     color: Colors.purple,
                     borderRadius: BorderRadius.circular(16),
                   ),
-
                   child: const Icon(
                     Icons.menu_book,
                     color: Colors.white,
@@ -60,13 +51,11 @@ class HomeContent extends StatelessWidget {
 
                 const SizedBox(width: 16),
 
-                // BOOK INFO
+                // INFO BUKU
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-
                     children: [
-
                       const Text(
                         'What Should Be Wild',
                         style: TextStyle(
@@ -89,22 +78,18 @@ class HomeContent extends StatelessWidget {
 
                       Wrap(
                         spacing: 8,
-
                         children: [
-
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 6,
                             ),
-
                             decoration: BoxDecoration(
                               color: Colors.purple,
                               borderRadius: BorderRadius.circular(20),
                             ),
-
                             child: const Text(
-                              'Romance',
+                              'Romantis',
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -116,14 +101,12 @@ class HomeContent extends StatelessWidget {
                               horizontal: 12,
                               vertical: 6,
                             ),
-
                             decoration: BoxDecoration(
                               color: Colors.deepPurple,
                               borderRadius: BorderRadius.circular(20),
                             ),
-
                             child: const Text(
-                              'Mystery',
+                              'Misteri',
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -137,36 +120,26 @@ class HomeContent extends StatelessWidget {
                       // BOOKMARK BUTTON
                       Align(
                         alignment: Alignment.centerLeft,
-
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.purple,
                             borderRadius: BorderRadius.circular(12),
                           ),
-
                           child: IconButton(
-
                             icon: const Icon(
                               Icons.bookmark,
                               color: Colors.white,
                             ),
-
                             onPressed: () async {
-
                               await context
                                   .read<BookmarkViewModel>()
-                                  .addBookmark(
-                                    'What Should Be Wild',
-                                  );
+                                  .addBookmark('What Should Be Wild');
 
                               if (context.mounted) {
-
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(
-
+                                ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
-                                      'Story saved!',
+                                      'Cerita berhasil disimpan!',
                                     ),
                                   ),
                                 );
@@ -184,9 +157,9 @@ class HomeContent extends StatelessWidget {
 
           const SizedBox(height: 32),
 
-          // ================= CONTINUE READING =================
+          // ================= LANJUT MEMBACA =================
           const Text(
-            'Continue Reading',
+            'Lanjut Membaca',
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -198,12 +171,9 @@ class HomeContent extends StatelessWidget {
 
           SizedBox(
             height: 210,
-
             child: ListView(
               scrollDirection: Axis.horizontal,
-
               children: [
-
                 _bookCard('Memories'),
                 _bookCard('Holly Chase'),
                 _bookCard('A Study in Drowning'),
@@ -213,9 +183,9 @@ class HomeContent extends StatelessWidget {
 
           const SizedBox(height: 32),
 
-          // ================= TRENDING =================
+          // ================= BACAAN POPULER =================
           const Text(
-            'Trending Reads',
+            'Bacaan Populer',
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
@@ -232,27 +202,22 @@ class HomeContent extends StatelessWidget {
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
             childAspectRatio: 0.72,
-
             children: [
-
               _trendingCard(
                 title: 'Takdir Terindah',
                 views: '12K',
                 rank: '#1',
               ),
-
               _trendingCard(
                 title: 'Tentang Semesta',
                 views: '9K',
                 rank: '#2',
               ),
-
               _trendingCard(
                 title: 'Nightfall',
                 views: '8K',
                 rank: '#3',
               ),
-
               _trendingCard(
                 title: 'Silent Moon',
                 views: '7K',
@@ -270,20 +235,15 @@ class HomeContent extends StatelessWidget {
     return Container(
       width: 120,
       margin: const EdgeInsets.only(right: 16),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
-
           Container(
             height: 130,
-
             decoration: BoxDecoration(
               color: Colors.deepPurple,
               borderRadius: BorderRadius.circular(16),
             ),
-
             child: const Center(
               child: Icon(
                 Icons.menu_book,
@@ -317,24 +277,19 @@ class HomeContent extends StatelessWidget {
   }) {
     return Container(
       padding: const EdgeInsets.all(12),
-
       decoration: BoxDecoration(
         color: const Color(0xFF1E1E1E),
         borderRadius: BorderRadius.circular(20),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
-
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.purple,
                 borderRadius: BorderRadius.circular(16),
               ),
-
               child: const Center(
                 child: Icon(
                   Icons.auto_stories,
@@ -359,16 +314,13 @@ class HomeContent extends StatelessWidget {
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
             children: [
-
               Text(
                 views,
                 style: const TextStyle(
                   color: Colors.white70,
                 ),
               ),
-
               Text(
                 rank,
                 style: const TextStyle(
