@@ -7,22 +7,21 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<EditProfileScreen> createState() =>
+      _EditProfileScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _EditProfileScreenState
+    extends State<EditProfileScreen> {
 
   final TextEditingController usernameController =
       TextEditingController();
 
-  final TextEditingController bioController =
+  final TextEditingController nameController =
       TextEditingController();
 
-  final TextEditingController emailController =
-    TextEditingController();
-
-  final TextEditingController characterController =
-    TextEditingController();
+  final TextEditingController bioController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -30,17 +29,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     final profileVM =
         Provider.of<ProfileViewModel>(
-          context,
-          listen: false,
-        );
+      context,
+      listen: false,
+    );
 
-    usernameController.text = profileVM.username;
-    emailController.text = profileVM.email;
+    usernameController.text =
+        profileVM.username;
+
+    nameController.text =
+        profileVM.name;
+
+    bioController.text =
+        profileVM.bio;
   }
 
   @override
   Widget build(BuildContext context) {
-
     final profileVM =
         Provider.of<ProfileViewModel>(context);
 
@@ -48,188 +52,193 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: const Color(0xFF121212),
 
       appBar: AppBar(
-  backgroundColor: const Color(0xFF121212),
-
-  iconTheme: const IconThemeData(
-    color: Colors.white,
-  ),
-
-  title: const Text(
-    'Edit Profil',
-    style: TextStyle(
-      color: Colors.white,
-    ),
-  ),
-),
+        backgroundColor:
+            const Color(0xFF121212),
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: const Text(
+          'Edit Profil',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
 
       body: Padding(
-        padding: const EdgeInsets.all(20),
-
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+        ),
         child: Column(
           children: [
 
+            const SizedBox(height: 10),
+
             const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.purple,
-
+              radius: 42,
+              backgroundColor:
+                  Color(0xFFD9D9D9),
               child: Icon(
-                Icons.person,
-                size: 50,
-                color: Colors.white,
+                Icons.person_add_alt_1,
+                color: Colors.black54,
+                size: 28,
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 30),
 
-            // USERNAME FIELD
+            const Align(
+              alignment:
+                  Alignment.centerLeft,
+              child: Text(
+                'Username',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      FontWeight.w600,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
             TextField(
-              controller: usernameController,
-
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-
+              controller:
+                  usernameController,
               decoration: InputDecoration(
-                labelText: 'Username',
-
-                labelStyle: const TextStyle(
-                  color: Colors.white70,
-                ),
-
                 filled: true,
-                fillColor: const Color(0xFF1E1E1E),
-
-                border: OutlineInputBorder(
+                fillColor:
+                    const Color(0xFFD9D9D9),
+                contentPadding:
+                    const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                border:
+                    OutlineInputBorder(
                   borderRadius:
-                      BorderRadius.circular(14),
+                      BorderRadius.circular(
+                          10),
+                  borderSide:
+                      BorderSide.none,
                 ),
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
 
-TextField(
-  controller: characterController,
+            const Align(
+              alignment:
+                  Alignment.centerLeft,
+              child: Text(
+                'Nama',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      FontWeight.w600,
+                ),
+              ),
+            ),
 
-  style: const TextStyle(
-    color: Colors.white,
-  ),
+            const SizedBox(height: 8),
 
-  decoration: InputDecoration(
-    labelText: 'Nama Karakter',
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor:
+                    const Color(0xFFD9D9D9),
+                contentPadding:
+                    const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                border:
+                    OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(
+                          10),
+                  borderSide:
+                      BorderSide.none,
+                ),
+              ),
+            ),
 
-    labelStyle: const TextStyle(
-      color: Colors.white70,
-    ),
+            const SizedBox(height: 18),
 
-    filled: true,
-    fillColor: const Color(0xFF1E1E1E),
+            const Align(
+              alignment:
+                  Alignment.centerLeft,
+              child: Text(
+                'Bio',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      FontWeight.w600,
+                ),
+              ),
+            ),
 
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-    ),
-  ),
-),
+            const SizedBox(height: 8),
 
-            const SizedBox(height: 16),
-
-TextField(
-  controller: emailController,
-
-  style: const TextStyle(
-    color: Colors.white,
-  ),
-
-  decoration: InputDecoration(
-    labelText: 'Email',
-
-    labelStyle: const TextStyle(
-      color: Colors.white70,
-    ),
-
-    filled: true,
-    fillColor: const Color(0xFF1E1E1E),
-
-    border: OutlineInputBorder(
-      borderRadius:
-          BorderRadius.circular(14),
-    ),
-  ),
-),
-
-const SizedBox(height: 16),
-
-            // BIO FIELD
             TextField(
               controller: bioController,
-
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-
-              maxLines: 3,
-
               decoration: InputDecoration(
-                labelText: 'Bio',
-
-                labelStyle: const TextStyle(
-                  color: Colors.white70,
-                ),
-
                 filled: true,
-                fillColor: const Color(0xFF1E1E1E),
-
-                border: OutlineInputBorder(
+                fillColor:
+                    const Color(0xFFD9D9D9),
+                contentPadding:
+                    const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                border:
+                    OutlineInputBorder(
                   borderRadius:
-                      BorderRadius.circular(14),
+                      BorderRadius.circular(
+                          10),
+                  borderSide:
+                      BorderSide.none,
                 ),
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 30),
 
-            // SAVE BUTTON
             SizedBox(
-              width: double.infinity,
-
+              width: 140,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-
-                  padding:
-                      const EdgeInsets.symmetric(
-                    vertical: 14,
+                style:
+                    ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.purple,
+                  shape:
+                      RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(
+                            10),
                   ),
                 ),
+onPressed: () async {
+  await profileVM.saveUsername(
+    usernameController.text.trim(),
+  );
 
-                onPressed: () async {
+  await profileVM.saveName(
+    nameController.text.trim(),
+  );
 
-                  await profileVM.saveUsername(
-                    usernameController.text,
-                  );
+  await profileVM.saveBio(
+    bioController.text.trim(),
+  );
 
-                  await profileVM.saveEmail(
-  emailController.text,
-);
+  await profileVM.loadUser();
 
-                  if (context.mounted) {
-
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Profile updated!',
-                        ),
-                      ),
-                    );
-
-                    Navigator.pop(context);
-                  }
-                },
-
+  if (context.mounted) {
+    Navigator.pop(context);
+  }
+},
                 child: const Text(
-                  'Simpan Perubahan',
-
+                  'Simpan',
                   style: TextStyle(
                     color: Colors.white,
                   ),
