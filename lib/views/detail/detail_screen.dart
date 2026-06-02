@@ -118,7 +118,6 @@ class DetailScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16, top: 10),
           color: const Color(0xFF121212),
-          // Row dan tombol + sudah dihapus, langsung fokus ke tombol utama
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -132,7 +131,10 @@ class DetailScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BacaScreen(title: title),
+                  builder: (context) => BacaScreen(
+                    title: title,
+                    isAlreadyInLibrary: false, 
+                  ),
                 ),
               );
             },
@@ -147,10 +149,9 @@ class DetailScreen extends StatelessWidget {
           ),
         ),
       ),
-    ); // <--- INI YANG HILANG (Titik koma buat nutup Scaffold)
-  } // <--- INI JUGA HILANG (Kurung kurawal buat nutup Widget build)
+    ); 
+  } 
 
-  // Widget bantuan untuk membuat desain tag genre
   Widget _buildTag(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),

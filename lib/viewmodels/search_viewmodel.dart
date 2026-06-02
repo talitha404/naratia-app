@@ -35,6 +35,7 @@ class SearchViewModel extends ChangeNotifier {
       _currentState = SearchState.history;
       notifyListeners();
     } else if (!hasFocus && text.isEmpty) {
+      if (_currentState == SearchState.results) return;
       _currentState = SearchState.initial;
       notifyListeners();
     }
