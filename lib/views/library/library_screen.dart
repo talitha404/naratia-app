@@ -30,7 +30,7 @@ class LibraryScreen extends StatelessWidget {
                 child: GridView.builder(
                   itemCount: viewModel.stories.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, //
+                    crossAxisCount: 2, 
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 20,
                     childAspectRatio: 0.65,
@@ -47,7 +47,8 @@ class LibraryScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => BacaScreen(
-                              title: story.title, // <--- INI YANG DITAMBAHKAN
+                              title: story.title,
+                              isAlreadyInLibrary: true, // 🟢 SEKARANG SUDAH DITAMBAHKAN DI SINI
                             ),
                           ),
                         );
