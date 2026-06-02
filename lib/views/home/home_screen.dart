@@ -6,7 +6,7 @@ import '../library/library_screen.dart';
 import '../search/search_screen.dart';
 import '../write/write_hub_screen.dart';
 import '../profile/profile_screen.dart';
-import '../notification/notification_screen.dart';
+
 import 'package:provider/provider.dart';
 import '../../viewmodels/search_viewmodel.dart';
 
@@ -20,16 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  // 🔥 List halaman utama
-  final List<Widget> _screens = const [
-    HomeContent(),
-    LibraryScreen(),
-    SearchScreen(),
-    WriteHubScreen(),
-    ProfileScreen(),
-  ];
-
-  // 🔥 Judul AppBar
   final List<String> _titles = const [
     'Naratia',
     'Perpustakaan',
@@ -41,77 +31,76 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // ✅ tambahan
+      backgroundColor: const Color(0xFF121212),
 
       // ================= APPBAR =================
-      appBar: _currentIndex == 2 
-          ? null 
+      appBar: (_currentIndex == 0 || _currentIndex == 2)
+          ? null
           : AppBar(
               backgroundColor: const Color(0xFF121212),
               elevation: 0,
+              centerTitle: true,
               title: Text(
                 _titles[_currentIndex],
                 style: const TextStyle(
-                  fontFamily: 'Serif',
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.purple,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
-              actions: [
-                if (_currentIndex == 0)
-                  IconButton(
-                    icon: const Icon(
-                      Icons.notifications_none_outlined,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const NotificationScreen(),
-                        ),
-                      );
-                    },
-                  ),
-              ],
             ),
 
       // ================= BODY =================
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: [
+          HomeContent(
+            onNavigate: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+          ),
+          const LibraryScreen(),
+          const SearchScreen(),
+          const WriteHubScreen(),
+          const ProfileScreen(),
+        ],
       ),
 
       // ================= BOTTOM NAV =================
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: const Color(0xFF6A0DAD),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF1E1E1E),
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+
           onTap: (index) {
-            // Jika user sudah di halaman Cari (indeks 2) dan menekan tombol Cari lagi
             if (_currentIndex == 2 && index == 2) {
               context.read<SearchViewModel>().resetSearch();
             }
-            
+
             setState(() {
               _currentIndex = index;
             });
           },
+
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.white,
+          selectedItemColor: Colors.purpleAccent,
           unselectedItemColor: Colors.white60,
           showSelectedLabels: false,
           showUnselectedLabels: false,
+
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_filled),
               label: 'Beranda',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.book_outlined),
+              icon: Icon(Icons.menu_book_outlined),
               label: 'Library',
             ),
             BottomNavigationBarItem(

@@ -11,27 +11,56 @@ class AuthViewModel extends ChangeNotifier {
   bool get isAuthenticated => _token != null;
 
   /// LOGIN
-  Future<bool> login(String email, String password) async {
-    _setLoading(true);
+Future<bool> login(
+  String email,
+  String password,
+) async {
+  _setLoading(true);
 
-    try {
-      final result = await ApiService.login(email, password);
+  try {
+    final result = await ApiService.login(
+      email,
+      password,
+    );
 
-      if (result != null) {
-        _token = result;
-        await _saveToken(result);
-        notifyListeners();
-        return true;
-      }
-
+    if (result == null) {
       return false;
-    } catch (e) {
-      debugPrint('Login error: $e');
-      return false;
-    } finally {
-      _setLoading(false);
     }
+
+    final token = result['token'];
+    final user = result['user'];
+
+    final prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.setString('token', token);
+
+    await prefs.setString(
+      'username',
+      user['username'] ?? '',
+    );
+
+    await prefs.setString(
+      'email',
+      user['email'] ?? '',
+    );
+
+    await prefs.setString(
+      'name',
+      user['username'] ?? '',
+    );
+
+    _token = token;
+
+    notifyListeners();
+
+    return true;
+  } catch (_) {
+    return false;
+  } finally {
+    _setLoading(false);
   }
+}
 
   /// LOAD TOKEN (dipanggil saat app start)
   Future<void> loadToken() async {

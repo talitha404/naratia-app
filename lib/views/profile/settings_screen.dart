@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'storage_screen.dart';
+import 'help_screen.dart';
+import 'social_media_screen.dart';
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -10,58 +14,99 @@ class SettingsScreen extends StatelessWidget {
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF121212),
-        title: const Text("Settings"),
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: const Text(
+          'Pengaturan',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
 
-      body: ListView(
-        children: [
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
 
-          ListTile(
-            leading: const Icon(
-              Icons.dark_mode,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Dark Mode',
-              style: TextStyle(color: Colors.white),
-            ),
-            trailing: Switch(
-              value: true,
-              onChanged: (value) {},
-            ),
-          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
 
-          ListTile(
-            leading: const Icon(
-              Icons.notifications,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Notifications',
-              style: TextStyle(color: Colors.white),
-            ),
-            trailing: Switch(
-              value: true,
-              onChanged: (value) {},
-            ),
-          ),
+              _menuButton(
+                text: 'Penyimpanan',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const StorageScreen(),
+                    ),
+                  );
+                },
+              ),
 
-          ListTile(
-            leading: const Icon(
-              Icons.lock_outline,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Privacy',
-              style: TextStyle(color: Colors.white),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white54,
-              size: 16,
-            ),
+              const SizedBox(height: 20),
+
+              _menuButton(
+                text: 'Bantuan Dan Saran',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const HelpScreen(),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 20),
+
+              _menuButton(
+                text: 'Hubungkan Sosmed',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const SocialMediaScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  static Widget _menuButton({
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+
+      child: ElevatedButton(
+        onPressed: onTap,
+
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFD9D9D9),
+
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

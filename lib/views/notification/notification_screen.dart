@@ -10,51 +10,22 @@ class NotificationScreen extends StatelessWidget {
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF121212),
-        elevation: 0,
-
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
-          'Notifications',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          'Notifikasi',
+          style: TextStyle(color: Colors.white),
         ),
       ),
 
       body: ListView(
         padding: const EdgeInsets.all(16),
-
         children: const [
-
-          NotificationCard(
-            message:
-                'Halo! Bacaanmu menunggu! Apa kamu ada waktu?',
-          ),
-
-          NotificationCard(
-            message:
-                'Chapter baru dari "Rewriting Stories" sudah rilis, baca sekarang!',
-          ),
-
-          NotificationCard(
-            message:
-                '🔥 Sedang trending: "My Fairy"',
-          ),
-
-          NotificationCard(
-            message:
-                'Karena kamu suka y/n, coba baca "Tentang Semesta!"',
-          ),
-
-          NotificationCard(
-            message:
-                'Cerita "Why Don’t We" lagi ramai dibaca pengguna lain!',
-          ),
-
-          NotificationCard(
-            message:
-                'Sudah beberapa hari kamu tidak membaca, ayo lanjutkan!',
-          ),
+          NotificationCard(message: 'Halo! Bacaanmu menunggu!'),
+          NotificationCard(message: 'Chapter baru sudah rilis!'),
+          NotificationCard(message: '🔥 Sedang trending: My Fairy'),
+          NotificationCard(message: 'Coba baca Tentang Semesta'),
+          NotificationCard(message: 'Why Don’t We lagi ramai!'),
+          NotificationCard(message: 'Ayo lanjutkan bacaanmu!'),
         ],
       ),
     );
@@ -64,54 +35,52 @@ class NotificationScreen extends StatelessWidget {
 class NotificationCard extends StatelessWidget {
   final String message;
 
-  const NotificationCard({
-    super.key,
-    required this.message,
-  });
+  const NotificationCard({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
       ),
-
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
-
-          // ICON
           Container(
-            width: 50,
-            height: 50,
-
+            width: 45,
+            height: 45,
             decoration: const BoxDecoration(
               color: Colors.purple,
               shape: BoxShape.circle,
             ),
-
-            child: const Icon(
-              Icons.menu_book,
-              color: Colors.white,
-            ),
+            child: const Icon(Icons.auto_awesome, color: Colors.white),
           ),
 
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
 
-          // MESSAGE
           Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                height: 1.5,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Naratia',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
