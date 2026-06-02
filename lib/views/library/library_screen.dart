@@ -48,7 +48,7 @@ class LibraryScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => BacaScreen(
                               title: story.title,
-                              isAlreadyInLibrary: true, // 🟢 SEKARANG SUDAH DITAMBAHKAN DI SINI
+                              // 🟢 isAlreadyInLibrary SUDAH DIHAPUS BIAR NGGAK ERROR
                             ),
                           ),
                         );
