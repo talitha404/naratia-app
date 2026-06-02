@@ -17,7 +17,7 @@ class LibraryViewModel extends ChangeNotifier {
     ),
     StoryModel(
       title: 'AFTERLIFE',
-      image: 'https://images.unsplash.com/photo-1474932430478-367db26830c1?w=500',
+      image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500',
     ),
   ];
 
