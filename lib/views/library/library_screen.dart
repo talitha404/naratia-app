@@ -42,10 +42,14 @@ class LibraryScreen extends StatelessWidget {
                       onTap: () {
                         viewModel.selectStory(story);
 
-                        // Berpindah ke Halaman Baca
+                        // Berpindah ke Halaman Baca dan mengirimkan judul cerita
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const BacaScreen()),
+                          MaterialPageRoute(
+                            builder: (context) => BacaScreen(
+                              title: story.title, // <--- INI YANG DITAMBAHKAN
+                            ),
+                          ),
                         );
                       },
                       child: Column(

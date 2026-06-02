@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  static const String baseUrl = "http://10.0.2.2:8000/api";
 
   static Future<Map<String, dynamic>?> login(
     String email,
@@ -15,10 +15,7 @@ class ApiService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
       if (response.statusCode == 200) {
@@ -32,39 +29,36 @@ class ApiService {
   }
 
   static Future<bool> register(
-  String username,
-  String email,
-  String password,
-) async {
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/register'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode({
-        'username': username,
-        'email': email,
-        'password': password,
-        'password_confirmation': password,
-      }),
-    );
-
-    print('STATUS: ${response.statusCode}');
-    print('BODY: ${response.body}');
-
-    return response.statusCode == 200 ||
-        response.statusCode == 201;
-  } catch (e) {
-    print('REGISTER ERROR: $e');
-    return false;
-  }
-}
-
-  static Future<Map<String, dynamic>?> getUser(
-    String token,
+    String username,
+    String email,
+    String password,
   ) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/register'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'username': username,
+          'email': email,
+          'password': password,
+          'password_confirmation': password,
+        }),
+      );
+
+      print('STATUS: ${response.statusCode}');
+      print('BODY: ${response.body}');
+
+      return response.statusCode == 200 || response.statusCode == 201;
+    } catch (e) {
+      print('REGISTER ERROR: $e');
+      return false;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getUser(String token) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/user'),
