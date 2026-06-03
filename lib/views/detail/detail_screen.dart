@@ -28,16 +28,12 @@ class DetailScreen extends StatelessWidget {
             // Cover Buku
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network( // 🔥 SUDAH DIGANTI KE NETWORK BIAR AMAN
-                imagePath,
-                height: 200,
-                width: 140,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 200, width: 140, color: Colors.grey,
-                  child: const Icon(Icons.broken_image, color: Colors.white),
-                ),
-              ),
+              child: Image.asset(
+  imagePath,
+  height: 200,
+  width: 140,
+  fit: BoxFit.cover,
+)
             ),
             const SizedBox(height: 24),
             

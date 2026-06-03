@@ -5,19 +5,19 @@ class LibraryViewModel extends ChangeNotifier {
   final List<StoryModel> _stories = [
     StoryModel(
       title: 'A THEORY DREAMING',
-      image: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=500',
+      image: 'assets/images/book2.png',
     ),
     StoryModel(
       title: 'WHAT SHOULD BE WILD',
-      image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500',
+      image: 'assets/images/book1.png',
     ),
     StoryModel(
       title: 'REWRITING MEMORIES',
-      image: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=500',
+      image: 'assets/images/book3.png',
     ),
     StoryModel(
       title: 'AFTERLIFE',
-      image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500',
+      image: 'assets/images/book4.png',
     ),
   ];
 

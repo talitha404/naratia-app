@@ -23,8 +23,10 @@ class SocialMediaScreen extends StatelessWidget {
         ),
       ),
 
-      body: Center(
-        child: Container(
+      body: SafeArea(
+  child: SingleChildScrollView(
+    child: Center(
+      child: Container(
           width: double.infinity,
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.all(24),
@@ -79,10 +81,12 @@ _socialButton(
   'X / Twitter',
   Icons.close,
 ),
-            ],
+                        ],
           ),
         ),
       ),
+    ),
+  ),
     );
   }
 
