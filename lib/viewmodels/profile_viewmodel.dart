@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/api_service.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   String _username = '';
