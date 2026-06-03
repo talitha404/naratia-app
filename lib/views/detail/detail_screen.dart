@@ -1,168 +1,130 @@
 import 'package:flutter/material.dart';
-import '../baca/baca_screen.dart'; 
+import '../baca/baca_screen.dart';
 
 class DetailScreen extends StatelessWidget {
+  // Variabel penampung data dari halaman sebelumnya
   final String title;
-  final String image;
+  final String imagePath;
 
-  const DetailScreen({super.key, required this.title, required this.image});
+  const DetailScreen({super.key, required this.title, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
-      
-      // ================= APPBAR =================
       appBar: AppBar(
-        backgroundColor: const Color(0xFF121212),
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-
-      // ================= BODY (Konten Detail) =================
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Cover Buku
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                image,
-                height: 220,
-                width: 150,
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network( // 🔥 SUDAH DIGANTI KE NETWORK BIAR AMAN
+                imagePath,
+                height: 200,
+                width: 140,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 200, width: 140, color: Colors.grey,
+                  child: const Icon(Icons.broken_image, color: Colors.white),
+                ),
               ),
             ),
             const SizedBox(height: 24),
-
-            // Judul
+            
+            // Judul Dinamis
             Text(
-              title,
+              title.toUpperCase(),
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
 
-            // Penulis & Rating
+            // Penulis & Rating Dummy
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.edit, color: Colors.white70, size: 14),
-                const SizedBox(width: 6),
-                const Text('Layla_one', style: TextStyle(color: Colors.white70, fontSize: 13)),
+                const Icon(Icons.edit, color: Colors.white54, size: 14),
+                const SizedBox(width: 4),
+                const Text('Layla.one', style: TextStyle(color: Colors.white54, fontSize: 12)),
                 const SizedBox(width: 16),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Text('R', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 11)),
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
+                  child: const Text('15+', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold)),
                 ),
-                const SizedBox(width: 6),
-                const Text('15+', style: TextStyle(color: Colors.white70, fontSize: 13)),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            // Tags / Genre
+            // Genre Tags Dummy
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTag('Romance'),
-                const SizedBox(width: 10),
-                _buildTag('Fantasi'),
-                const SizedBox(width: 10),
-                _buildTag('Petualangan'),
+                _buildTag('Romance'), _buildTag('Fantasi'), _buildTag('Petualangan'),
               ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
 
-            // Sub-judul & Sinopsis
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+            // Sinopsis Lorem Ipsum
+            const Text(
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+              style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 32),
+
+            // Tombol Mulai Baca
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Pindah ke BacaScreen bawa Judul
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BacaScreen(title: title),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                ),
+                child: const Text(
+                  'MULAI BACA',
+                  style: TextStyle(color: Color(0xFF610094), fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            const Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.justify,
-            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),
-
-      // ================= BOTTOM BAR (Hanya Tombol Mulai Baca) =================
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16, top: 10),
-          color: const Color(0xFF121212),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onPressed: () {
-              // Navigasi ke BacaScreen saat dipencet
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BacaScreen(
-                    title: title,
-                    isAlreadyInLibrary: false, 
-                  ),
-                ),
-              );
-            },
-            child: const Text(
-              'MULAI BACA',
-              style: TextStyle(
-                color: Color(0xFF7512B6), // Warna ungu Naratia
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ),
-    ); 
-  } 
+    );
+  }
 
   Widget _buildTag(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white54),
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.bold),
-      ),
+      child: Text(text, style: const TextStyle(color: Colors.white, fontSize: 10)),
     );
   }
 }

@@ -71,11 +71,11 @@ class _HomeScreenState extends State<HomeScreen> {
       // ================= BOTTOM NAV =================
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFF1E1E1E),
+          color: Color(0xFF610094), // 🔥 Latar Ungu Pekat
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.transparent, 
           elevation: 0,
 
           onTap: (index) {
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
 
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.purpleAccent,
+          selectedItemColor: Colors.white, // 🔥 Ikon putih saat aktif
           unselectedItemColor: Colors.white60,
           showSelectedLabels: false,
           showUnselectedLabels: false,

@@ -24,6 +24,7 @@ dev_dependencies:
 
   flutter_native_splash: ^2.4.1
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
@@ -39,3 +40,10 @@ flutter_native_splash:
 
   android_12:
     color: "#121212"
+
+#flutter_launcher_icons:
+ # android: "launcher_icon"
+  #ios: true
+  #image_path: "assets/images/logo_naratia.jpeg"
+  #adaptive_icon_background: "#02040F" 
+  #adaptive_icon_foreground: "assets/images/logo_naratia.jpeg"

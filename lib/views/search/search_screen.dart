@@ -117,9 +117,9 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildSearchBar(SearchViewModel viewModel) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withAlpha(26), // 🟢 Diganti withAlpha biar nggak warning
         borderRadius: BorderRadius.circular(20), // Radius diperkecil
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withAlpha(51)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -190,11 +190,11 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withOpacity(0.1)),
+                  border: Border.all(color: Colors.white.withAlpha(26)),
                   image: DecorationImage(
                     image: NetworkImage(genre['img']!),
                     fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
+                    colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken), // 🟢 Diperbarui ke Colors.black54
                   ),
                 ),
                 alignment: Alignment.center,
@@ -230,9 +230,9 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Diperkecil
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withAlpha(13), // 🟢 Diganti withAlpha
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.white.withOpacity(0.05)),
+                  border: Border.all(color: Colors.white.withAlpha(13)),
                 ),
                 child: Row(
                   children: [
@@ -281,14 +281,14 @@ class _SearchScreenState extends State<SearchScreen> {
           MaterialPageRoute(
             builder: (context) => DetailScreen(
               title: title, // Ngambil judul dari hasil pencarian
-              image: imgUrl, // Ngambil gambar dari hasil pencarian
+              imagePath: imgUrl, // 🟢 DIGANTI JADI imagePath BIAR COCOK
             ),
           ),
         );
       },
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withOpacity(0.1))),
+        decoration: BoxDecoration(color: Colors.white.withAlpha(13), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withAlpha(26))),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -323,4 +323,4 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-  } 
+}
