@@ -28,35 +28,62 @@ class ApiService {
     }
   }
 
-  static Future<bool> register(
-    String username,
-    String email,
-    String password,
-  ) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/register'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: jsonEncode({
-          'username': username,
-          'email': email,
-          'password': password,
-          'password_confirmation': password,
-        }),
-      );
+static Future<bool> register(
+  String username,
+  String email,
+  String password,
+) async {
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/register'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode({
+        'username': username,
+        'email': email,
+        'password': password,
+        'password_confirmation': password,
+      }),
+    );
 
-      print('STATUS: ${response.statusCode}');
-      print('BODY: ${response.body}');
+    print('REGISTER STATUS: ${response.statusCode}');
+    print('REGISTER BODY: ${response.body}');
 
-      return response.statusCode == 200 || response.statusCode == 201;
-    } catch (e) {
-      print('REGISTER ERROR: $e');
-      return false;
-    }
+    return response.statusCode == 200 ||
+        response.statusCode == 201;
+  } catch (e) {
+    print('REGISTER ERROR: $e');
+    return false;
   }
+}
+
+static Future<Map<String, dynamic>?> updateProfile(
+  String token,
+  String username,
+  String name,
+  String bio,
+) async {
+  final response = await http.put(
+    Uri.parse('$baseUrl/profile'),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    },
+    body: {
+      'username': username,
+      'name': name,
+      'bio': bio,
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  }
+
+  return null;
+}
 
   static Future<Map<String, dynamic>?> getUser(String token) async {
     try {

@@ -219,22 +219,33 @@ class _EditProfileScreenState
                   ),
                 ),
 onPressed: () async {
-  await profileVM.saveUsername(
+  final success =
+      await profileVM.updateProfile(
     usernameController.text.trim(),
-  );
-
-  await profileVM.saveName(
     nameController.text.trim(),
-  );
-
-  await profileVM.saveBio(
     bioController.text.trim(),
   );
 
-  await profileVM.loadUser();
+  if (!mounted) return;
 
-  if (context.mounted) {
+  if (success) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Profil berhasil diperbarui',
+        ),
+      ),
+    );
+
     Navigator.pop(context);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Gagal memperbarui profil',
+        ),
+      ),
+    );
   }
 },
                 child: const Text(
