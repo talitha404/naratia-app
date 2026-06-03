@@ -77,4 +77,102 @@ class ApiService {
       return null;
     }
   }
+
+  Future<dynamic> createStory({
+    required String token,
+    required String title,
+    required String description,
+    required int? genreId,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/stories'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'title': title,
+          'description': description,
+          'genre_id': genreId,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('CREATE STORY ERROR: $e');
+      return null;
+    }
+  }
+
+  Future<dynamic> createChapter({
+    required String token,
+    required int storyId,
+    required int chapterNumber,
+    required String title,
+    required String content,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/chapters'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'story_id': storyId,
+          'chapter_number': chapterNumber,
+          'title': title,
+          'content': content,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('CREATE CHAPTER ERROR: $e');
+      return null;
+    }
+  }
+
+  Future<dynamic> updateChapter({
+    required String token,
+    required int chapterId,
+    required String title,
+    required String content,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/chapters/$chapterId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'title': title,
+          'content': content,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('UPDATE CHAPTER ERROR: $e');
+      return null;
+    }
+  }
+
 }
