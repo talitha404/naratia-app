@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   String _username = '';
@@ -148,5 +149,24 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   return false;
+}
+
+Future<bool> sendFeedback(
+  String message,
+) async {
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  final token =
+      prefs.getString('token');
+
+  if (token == null) {
+    return false;
+  }
+
+  return await ApiService.sendFeedback(
+    token,
+    message,
+  );
 }
 }

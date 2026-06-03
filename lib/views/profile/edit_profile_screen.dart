@@ -67,11 +67,13 @@ class _EditProfileScreenState
         ),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-        ),
-        child: Column(
+      body: SafeArea(
+  child: SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30,
+      ),
+      child: Column(
           children: [
 
             const SizedBox(height: 10),
@@ -252,13 +254,15 @@ onPressed: () async {
                   'Simpan',
                   style: TextStyle(
                     color: Colors.white,
-                  ),
+                     ),
                 ),
               ),
             ),
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

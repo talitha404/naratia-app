@@ -85,6 +85,32 @@ static Future<Map<String, dynamic>?> updateProfile(
   return null;
 }
 
+static Future<bool> sendFeedback(
+  String token,
+  String message,
+) async {
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/feedback'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      },
+      body: {
+        'message': message,
+      },
+    );
+
+    print('FEEDBACK STATUS: ${response.statusCode}');
+    print('FEEDBACK BODY: ${response.body}');
+
+    return response.statusCode == 200;
+  } catch (e) {
+    print('FEEDBACK ERROR: $e');
+    return false;
+  }
+}
+
   static Future<Map<String, dynamic>?> getUser(String token) async {
     try {
       final response = await http.get(

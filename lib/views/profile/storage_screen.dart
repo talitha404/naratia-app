@@ -54,9 +54,11 @@ class _StorageScreenState extends State<StorageScreen> {
         ),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
+      body: SafeArea(
+  child: SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
           children: [
             const SizedBox(height: 20),
 
@@ -144,10 +146,12 @@ class _StorageScreenState extends State<StorageScreen> {
                   ),
                 ),
               ],
-            ),
+                          ),
           ],
         ),
       ),
+    ),
+  ),
     );
   }
 }
