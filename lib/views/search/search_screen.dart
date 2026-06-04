@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/search_viewmodel.dart';
 import '../detail/detail_screen.dart';
+// Note: Pastikan file NotificationScreen diimport jika Rindi memakainya di proyek aslimu
+// import '../notification/notification_screen.dart'; 
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -88,6 +90,45 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
+<<<<<<< Updated upstream
+=======
+
+  Widget _buildHeader(SearchViewModel viewModel) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            if (viewModel.currentState != SearchState.initial)
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22), 
+                padding: const EdgeInsets.only(right: 12),
+                constraints: const BoxConstraints(),
+                onPressed: () {
+                  _searchController.clear();
+                  viewModel.resetSearch();
+                  _searchFocusNode.unfocus();
+                }
+              ),
+            const Text(
+              'NARATIA',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -1.0, color: Colors.white),
+            ),
+          ],
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications_none, color: Colors.white, size: 22), 
+          onPressed: () {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const NotificationScreen()),
+            // );
+          }
+        ),
+      ],
+    );
+  }
+>>>>>>> Stashed changes
   
   Widget _buildSearchBar(SearchViewModel viewModel) {
     return Container(
@@ -143,7 +184,10 @@ class _SearchScreenState extends State<SearchScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     int columns = screenWidth > 800 ? 5 : (screenWidth > 600 ? 3 : 2);
 
+<<<<<<< Updated upstream
     // 🟢 LIST GENRE LANGSUNG DI SINI BIAR PAS LAYARNYA DAN NYAMBUNG KE 14 GENRE
+=======
+>>>>>>> Stashed changes
     final List<Map<String, String>> daftarGenreLengkap = [
       {'name': 'Romantis', 'img': 'https://picsum.photos/seed/romantis/300/200'},
       {'name': 'Fantasi', 'img': 'https://picsum.photos/seed/fantasi/300/200'},
@@ -183,7 +227,11 @@ class _SearchScreenState extends State<SearchScreen> {
             return GestureDetector(
               onTap: () {
                 _searchController.text = genre['name']!;
+<<<<<<< Updated upstream
                 viewModel.selectKeyword(genre['name']!, isGenre: true);
+=======
+                viewModel.submitSearch(genre['name']!);
+>>>>>>> Stashed changes
                 _searchFocusNode.unfocus();
               },
               child: PhysicalModel(
@@ -235,8 +283,13 @@ class _SearchScreenState extends State<SearchScreen> {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
+<<<<<<< Updated upstream
                 _searchController.text = viewModel.history[index];
                 viewModel.selectKeyword(viewModel.history[index]);
+=======
+                _searchController.text = keyword;
+                viewModel.submitSearch(keyword); 
+>>>>>>> Stashed changes
                 _searchFocusNode.unfocus();
               },
               borderRadius: BorderRadius.circular(10),
@@ -294,6 +347,10 @@ class _SearchScreenState extends State<SearchScreen> {
             builder: (context) => DetailScreen(
               title: title, 
               imagePath: imgUrl, 
+<<<<<<< Updated upstream
+=======
+              authorName: author, 
+>>>>>>> Stashed changes
             ),
           ),
         );
