@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Chapter {
   final int id;
   final int storyId;
@@ -17,13 +19,13 @@ class Chapter {
     this.updatedAt,
   });
 
-  /// Convert JSON → Object
+  /// 1. Convert dari JSON (dari API/Backend) ke Object
   factory Chapter.fromJson(Map<String, dynamic> json) {
     return Chapter(
       id: json['id'] as int,
       storyId: json['story_id'] as int,
       chapterNumber: json['chapter_number'] as int,
-      title: json['title'] ?? '',
+      title: json['title'] ?? 'Tanpa Judul',
       content: json['content'] ?? '',
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'])
@@ -34,7 +36,7 @@ class Chapter {
     );
   }
 
-  /// Convert Object → JSON (buat POST / PUT ke API)
+  /// 2. Convert dari Object ke JSON (untuk dikirim ke API via POST/PUT)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -47,7 +49,7 @@ class Chapter {
     };
   }
 
-  /// Copy object (berguna untuk edit/update state)
+  /// 3. CopyWith: Membantu saat ingin mengubah satu data saja tanpa merusak data lain
   Chapter copyWith({
     int? id,
     int? storyId,
