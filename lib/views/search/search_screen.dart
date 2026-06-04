@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/search_viewmodel.dart';
-import '../../views/notification/notification_screen.dart'; 
 import '../detail/detail_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -38,13 +37,12 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<SearchViewModel>();
 
-    // Jika state kembali ke initial (karena klik tombol nav atau back), kosongkan kolom teks
     if (viewModel.currentState == SearchState.initial && _searchController.text.isNotEmpty) {
       _searchController.clear();
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF02040F),
+      backgroundColor: const Color(0xFF02040F), 
       body: Stack(
         children: [
           Positioned.fill(
@@ -62,10 +60,25 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(viewModel),
-                  const SizedBox(height: 20), // Jarak diperkecil
+                  if (viewModel.currentState != SearchState.initial)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22), 
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () {
+                          _searchController.clear();
+                          viewModel.resetSearch();
+                          _searchFocusNode.unfocus();
+                        }
+                      ),
+                    )
+                  else
+                    const SizedBox(height: 10), 
+                  
                   _buildSearchBar(viewModel),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 30), 
                   _buildDynamicContent(viewModel),
                 ],
               ),
@@ -75,51 +88,20 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-
-  Widget _buildHeader(SearchViewModel viewModel) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            if (viewModel.currentState != SearchState.initial)
-              IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22), 
-                padding: const EdgeInsets.only(right: 12),
-                constraints: const BoxConstraints(),
-                onPressed: () {
-                  _searchController.clear();
-                  viewModel.resetSearch();
-                  _searchFocusNode.unfocus();
-                }
-              ),
-            const Text(
-              'NARATIA',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -1.0, color: Colors.white),
-            ),
-          ],
-        ),
-        // Ikon search sudah dihapus, tinggal notifikasi saja
-        IconButton(
-          icon: const Icon(Icons.notifications_none, color: Colors.white, size: 22), 
-          onPressed: () {
-            // Arahkan ke NotificationScreen saat diklik
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const NotificationScreen()),
-            );
-          }
-        ),
-      ],
-    );
-  }
   
   Widget _buildSearchBar(SearchViewModel viewModel) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(26), // 🟢 Diganti withAlpha biar nggak warning
-        borderRadius: BorderRadius.circular(20), // Radius diperkecil
+        color: Colors.white.withAlpha(26), 
+        borderRadius: BorderRadius.circular(20), 
         border: Border.all(color: Colors.white.withAlpha(51)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(51),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -128,7 +110,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: TextField(
             controller: _searchController,
             focusNode: _searchFocusNode,
-            style: const TextStyle(color: Colors.white, fontSize: 14), // Teks lebih kecil
+            style: const TextStyle(color: Colors.white, fontSize: 14), 
             onSubmitted: (value) {
               viewModel.submitSearch(value);
               _searchFocusNode.unfocus();
@@ -138,7 +120,6 @@ class _SearchScreenState extends State<SearchScreen> {
               hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
               prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
               border: InputBorder.none,
-              // Kotak search bar diperkecil tinggi dan paddingnya
               contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16), 
             ),
           ),
@@ -159,46 +140,78 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildGenreGrid(SearchViewModel viewModel) {
-    // Mengecek lebar layar untuk menentukan jumlah kolom secara dinamis
     double screenWidth = MediaQuery.of(context).size.width;
     int columns = screenWidth > 800 ? 5 : (screenWidth > 600 ? 3 : 2);
+
+    // 🟢 LIST GENRE LANGSUNG DI SINI BIAR PAS LAYARNYA DAN NYAMBUNG KE 14 GENRE
+    final List<Map<String, String>> daftarGenreLengkap = [
+      {'name': 'Romantis', 'img': 'https://picsum.photos/seed/romantis/300/200'},
+      {'name': 'Fantasi', 'img': 'https://picsum.photos/seed/fantasi/300/200'},
+      {'name': 'Kehidupan', 'img': 'https://picsum.photos/seed/kehidupan/300/200'},
+      {'name': 'Horor', 'img': 'https://picsum.photos/seed/horor/300/200'},
+      {'name': 'Fanfiction', 'img': 'https://picsum.photos/seed/fanfiction/300/200'},
+      {'name': 'Drama', 'img': 'https://picsum.photos/seed/drama/300/200'},
+      {'name': 'Detektif', 'img': 'https://picsum.photos/seed/detektif/300/200'},
+      {'name': 'Petualangan', 'img': 'https://picsum.photos/seed/petualangan/300/200'},
+      {'name': 'Thriller', 'img': 'https://picsum.photos/seed/thriller/300/200'},
+      {'name': 'Fiksi Remaja', 'img': 'https://picsum.photos/seed/fiksiremaja/300/200'},
+      {'name': 'Komedi', 'img': 'https://picsum.photos/seed/komedi/300/200'},
+      {'name': 'Aksi', 'img': 'https://picsum.photos/seed/aksi/300/200'},
+      {'name': 'Sci-Fi', 'img': 'https://picsum.photos/seed/scifi/300/200'},
+      {'name': 'Misteri', 'img': 'https://picsum.photos/seed/misteri/300/200'},
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('PENCARIAN POPULER', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 2.0)),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 20),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: columns, // Dinamis! Di laptop jadi lebih banyak kotak kecil
-            crossAxisSpacing: 12, 
-            mainAxisSpacing: 12, 
-            childAspectRatio: 2.0, // Membuat kotaknya lebih pipih dan proporsional
+            crossAxisCount: columns, 
+            crossAxisSpacing: 16, 
+            mainAxisSpacing: 16, 
+            childAspectRatio: 2.2, 
           ),
-          itemCount: viewModel.genres.length,
+          itemCount: daftarGenreLengkap.length,
           itemBuilder: (context, index) {
-            final genre = viewModel.genres[index];
+            final genre = daftarGenreLengkap[index];
+
             return GestureDetector(
               onTap: () {
                 _searchController.text = genre['name']!;
                 viewModel.selectKeyword(genre['name']!, isGenre: true);
                 _searchFocusNode.unfocus();
               },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withAlpha(26)),
-                  image: DecorationImage(
-                    image: NetworkImage(genre['img']!),
-                    fit: BoxFit.cover,
-                    colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken), // 🟢 Diperbarui ke Colors.black54
+              child: PhysicalModel(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(15),
+                elevation: 6, 
+                shadowColor: Colors.black.withAlpha(180),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
+                      image: NetworkImage(genre['img']!),
+                      fit: BoxFit.cover,
+                      colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken),
+                    ),
+                    border: Border.all(color: Colors.white.withAlpha(26)),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    genre['name']!.toUpperCase(), 
+                    style: const TextStyle(
+                      color: Colors.white, 
+                      fontSize: 12, 
+                      fontWeight: FontWeight.w800, 
+                      letterSpacing: 1.2
+                    )
                   ),
                 ),
-                alignment: Alignment.center,
-                child: Text(genre['name']!.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
               ),
             );
           },
@@ -228,9 +241,9 @@ class _SearchScreenState extends State<SearchScreen> {
               },
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Diperkecil
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), 
                 decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(13), // 🟢 Diganti withAlpha
+                  color: Colors.white.withAlpha(13), 
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.white.withAlpha(13)),
                 ),
@@ -275,13 +288,12 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildResultCard(String title, String author, String desc, String imgUrl, List<String> tags) {
     return GestureDetector(
       onTap: () {
-        // Logika pindah ke halaman Detail
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetailScreen(
-              title: title, // Ngambil judul dari hasil pencarian
-              imagePath: imgUrl, // 🟢 DIGANTI JADI imagePath BIAR COCOK
+              title: title, 
+              imagePath: imgUrl, 
             ),
           ),
         );
