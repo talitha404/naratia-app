@@ -63,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildHeader(viewModel),
-                  const SizedBox(height: 20), // Jarak diperkecil
+                  const SizedBox(height: 20), 
                   _buildSearchBar(viewModel),
                   const SizedBox(height: 24),
                   _buildDynamicContent(viewModel),
@@ -99,11 +99,9 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ],
         ),
-        // Ikon search sudah dihapus, tinggal notifikasi saja
         IconButton(
           icon: const Icon(Icons.notifications_none, color: Colors.white, size: 22), 
           onPressed: () {
-            // Arahkan ke NotificationScreen saat diklik
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const NotificationScreen()),
@@ -117,8 +115,8 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildSearchBar(SearchViewModel viewModel) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(26), // 🟢 Diganti withAlpha biar nggak warning
-        borderRadius: BorderRadius.circular(20), // Radius diperkecil
+        color: Colors.white.withAlpha(26), 
+        borderRadius: BorderRadius.circular(20), 
         border: Border.all(color: Colors.white.withAlpha(51)),
       ),
       child: ClipRRect(
@@ -128,7 +126,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: TextField(
             controller: _searchController,
             focusNode: _searchFocusNode,
-            style: const TextStyle(color: Colors.white, fontSize: 14), // Teks lebih kecil
+            style: const TextStyle(color: Colors.white, fontSize: 14), 
             onSubmitted: (value) {
               viewModel.submitSearch(value);
               _searchFocusNode.unfocus();
@@ -138,7 +136,6 @@ class _SearchScreenState extends State<SearchScreen> {
               hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
               prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
               border: InputBorder.none,
-              // Kotak search bar diperkecil tinggi dan paddingnya
               contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16), 
             ),
           ),
@@ -159,7 +156,6 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildGenreGrid(SearchViewModel viewModel) {
-    // Mengecek lebar layar untuk menentukan jumlah kolom secara dinamis
     double screenWidth = MediaQuery.of(context).size.width;
     int columns = screenWidth > 800 ? 5 : (screenWidth > 600 ? 3 : 2);
 
@@ -173,18 +169,21 @@ class _SearchScreenState extends State<SearchScreen> {
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 20),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: columns, // Dinamis! Di laptop jadi lebih banyak kotak kecil
+            crossAxisCount: columns, 
             crossAxisSpacing: 12, 
             mainAxisSpacing: 12, 
-            childAspectRatio: 2.0, // Membuat kotaknya lebih pipih dan proporsional
+            childAspectRatio: 2.0, 
           ),
           itemCount: viewModel.genres.length,
           itemBuilder: (context, index) {
             final genre = viewModel.genres[index];
+            final genreName = genre['name']!;
+
             return GestureDetector(
               onTap: () {
-                _searchController.text = genre['name']!;
-                viewModel.selectKeyword(genre['name']!, isGenre: true);
+                // Biar genre populer langsung nampilin hasil pas di-klik
+                _searchController.text = genreName;
+                viewModel.submitSearch(genreName);
                 _searchFocusNode.unfocus();
               },
               child: Container(
@@ -194,11 +193,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   image: DecorationImage(
                     image: NetworkImage(genre['img']!),
                     fit: BoxFit.cover,
-                    colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken), // 🟢 Diperbarui ke Colors.black54
+                    colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken), 
                   ),
                 ),
                 alignment: Alignment.center,
-                child: Text(genre['name']!.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
+                child: Text(genreName.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
               ),
             );
           },
@@ -220,17 +219,20 @@ class _SearchScreenState extends State<SearchScreen> {
           itemCount: viewModel.history.length,
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
+            final keyword = viewModel.history[index];
+            
             return InkWell(
               onTap: () {
-                _searchController.text = viewModel.history[index];
-                viewModel.selectKeyword(viewModel.history[index]);
+                // Menjalankan submit pencarian dari riwayat yang dipilih
+                _searchController.text = keyword;
+                viewModel.submitSearch(keyword); 
                 _searchFocusNode.unfocus();
               },
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Diperkecil
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), 
                 decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(13), // 🟢 Diganti withAlpha
+                  color: Colors.white.withAlpha(13), 
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.white.withAlpha(13)),
                 ),
@@ -238,7 +240,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     const Icon(Icons.history, color: Colors.grey, size: 18),
                     const SizedBox(width: 12),
-                    Text(viewModel.history[index], style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text(keyword, style: const TextStyle(color: Colors.white70, fontSize: 13)),
                   ],
                 ),
               ),
@@ -275,13 +277,13 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildResultCard(String title, String author, String desc, String imgUrl, List<String> tags) {
     return GestureDetector(
       onTap: () {
-        // Logika pindah ke halaman Detail
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetailScreen(
-              title: title, // Ngambil judul dari hasil pencarian
-              imagePath: imgUrl, // 🟢 DIGANTI JADI imagePath BIAR COCOK
+              title: title, 
+              imagePath: imgUrl, 
+              authorName: author, // Ditambahkan biar nama author ke-passing ke detail screen
             ),
           ),
         );
