@@ -3,10 +3,22 @@ import '../baca/baca_screen.dart';
 
 class DetailScreen extends StatelessWidget {
   // Variabel penampung data dari halaman sebelumnya
+  final int storyId;
   final String title;
   final String imagePath;
+  final String authorName;
+  final String token;
+  final bool isFromLibrary; 
 
-  const DetailScreen({super.key, required this.title, required this.imagePath});
+  const DetailScreen({
+    super.key, 
+    required this.title, 
+    required this.imagePath,
+    this.storyId = 1,              
+    this.authorName = 'Layla.one',   
+    this.token = '',                
+    this.isFromLibrary = false,     
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +40,35 @@ class DetailScreen extends StatelessWidget {
             // Cover Buku
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-  imagePath,
-  height: 200,
-  width: 140,
-  fit: BoxFit.cover,
-)
+              child: imagePath.startsWith('http')
+                  ? Image.network(
+                      imagePath,
+                      height: 200,
+                      width: 140,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 200,
+                          width: 140,
+                          color: Colors.grey[900],
+                          child: const Icon(Icons.broken_image, color: Colors.white54),
+                        );
+                      },
+                    )
+                  : Image.asset(
+                      imagePath,
+                      height: 200,
+                      width: 140,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 200,
+                          width: 140,
+                          color: Colors.grey[900],
+                          child: const Icon(Icons.broken_image, color: Colors.white54),
+                        );
+                      },
+                    ),
             ),
             const SizedBox(height: 24),
             
@@ -47,13 +82,13 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // Penulis & Rating Dummy
+            // ✨ PENULIS TETAP TAMPIL DI SINI (Statik & Gak Bisa Diklik)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.edit, color: Colors.white54, size: 14),
                 const SizedBox(width: 4),
-                const Text('Layla.one', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                Text(authorName, style: const TextStyle(color: Colors.white54, fontSize: 12)),
                 const SizedBox(width: 16),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -73,7 +108,7 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Sinopsis Lorem Ipsum
+            // Sinopsis
             const Text(
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
               style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
@@ -82,30 +117,36 @@ class DetailScreen extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Tombol Mulai Baca
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Pindah ke BacaScreen bawa Judul
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BacaScreen(title: title),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                child: const Text(
-                  'MULAI BACA',
-                  style: TextStyle(color: Color(0xFF610094), fontWeight: FontWeight.bold),
+            if (!isFromLibrary) ...[
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BacaScreen(
+                          storyId: storyId,
+                          storyTitle: title,
+                          coverUrl: imagePath, // ✂️ Parameter authorName udah sukses dibuang dari sini!
+                          token: token,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                  ),
+                  child: const Text(
+                    'MULAI BACA',
+                    style: TextStyle(color: Color(0xFF610094), fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
+            ],
           ],
         ),
       ),

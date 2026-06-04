@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/library_viewmodel.dart';
-import '../detail/detail_screen.dart';
+import '../baca/baca_screen.dart'; 
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -42,14 +42,18 @@ class LibraryScreen extends StatelessWidget {
                       onTap: () {
                         viewModel.selectStory(story);
 
-                        // Berpindah ke Halaman Baca dan mengirimkan judul cerita
+                        // Navigator langsung menuju BacaScreen tanpa membawa authorName
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailScreen(
-  title: story.title,
-  imagePath: story.image,
-),
+                            builder: (context) => BacaScreen(
+                              storyId: story.id ?? 1,         
+                              storyTitle: story.title,
+                              coverUrl: story.image,
+                              token: '',                      // Kosongkan atau isi jika token disimpan di session
+                              isFromLibrary: true,            // KUNCI UTAMA: Supaya tidak muncul pop-up simpan saat keluar
+                              // ✂️ Baris authorName di sini sudah resmi dibuang!
+                            ),
                           ),
                         );
                       },
@@ -62,9 +66,11 @@ class LibraryScreen extends StatelessWidget {
                                 color: Colors.grey[800],
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
-  image: AssetImage(story.image),
-  fit: BoxFit.cover,
-),
+                                  image: story.image.startsWith('http')
+                                      ? NetworkImage(story.image) as ImageProvider
+                                      : AssetImage(story.image) as ImageProvider,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
