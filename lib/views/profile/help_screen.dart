@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../viewmodels/profile_viewmodel.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});
@@ -16,24 +18,47 @@ class _HelpScreenState extends State<HelpScreen> {
     super.dispose();
   }
 
-  void sendSuggestion() {
-    if (controller.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Silakan isi saran atau pertanyaan terlebih dahulu'),
-        ),
-      );
-      return;
-    }
-
+Future<void> sendSuggestion() async {
+  if (controller.text.trim().isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Saran berhasil dikirim'),
+        content: Text(
+          'Silakan isi saran atau pertanyaan terlebih dahulu',
+        ),
+      ),
+    );
+    return;
+  }
+
+  final success =
+      await context
+          .read<ProfileViewModel>()
+          .sendFeedback(
+            controller.text.trim(),
+          );
+
+  if (!mounted) return;
+
+  if (success) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Saran berhasil dikirim',
+        ),
       ),
     );
 
     controller.clear();
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Gagal mengirim saran',
+        ),
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +73,11 @@ class _HelpScreenState extends State<HelpScreen> {
         ),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
+      body: SafeArea(
+  child: SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Center(
@@ -140,7 +167,7 @@ class _HelpScreenState extends State<HelpScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(
+                            child: const Center(
                 child: Text(
                   '0812345678',
                 ),
@@ -149,6 +176,8 @@ class _HelpScreenState extends State<HelpScreen> {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

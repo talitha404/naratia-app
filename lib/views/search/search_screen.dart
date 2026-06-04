@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/search_viewmodel.dart';
 import '../detail/detail_screen.dart';
-// Note: Pastikan file NotificationScreen diimport jika Rindi memakainya di proyek aslimu
-// import '../notification/notification_screen.dart'; 
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -22,8 +20,8 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _searchFocusNode.addListener(() {
       context.read<SearchViewModel>().onSearchFocusChanged(
-        _searchFocusNode.hasFocus, 
-        _searchController.text
+        _searchFocusNode.hasFocus,
+        _searchController.text,
       );
     });
   }
@@ -39,12 +37,13 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<SearchViewModel>();
 
-    if (viewModel.currentState == SearchState.initial && _searchController.text.isNotEmpty) {
+    if (viewModel.currentState == SearchState.initial &&
+        _searchController.text.isNotEmpty) {
       _searchController.clear();
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFF02040F), 
+      backgroundColor: const Color(0xFF02040F),
       body: Stack(
         children: [
           Positioned.fill(
@@ -58,29 +57,17 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 16.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (viewModel.currentState != SearchState.initial)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22), 
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                        onPressed: () {
-                          _searchController.clear();
-                          viewModel.resetSearch();
-                          _searchFocusNode.unfocus();
-                        }
-                      ),
-                    )
-                  else
-                    const SizedBox(height: 10), 
-                  
+                  _buildHeader(viewModel),
+                  const SizedBox(height: 20),
                   _buildSearchBar(viewModel),
-                  const SizedBox(height: 30), 
+                  const SizedBox(height: 30),
                   _buildDynamicContent(viewModel),
                 ],
               ),
@@ -90,8 +77,6 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-<<<<<<< Updated upstream
-=======
 
   Widget _buildHeader(SearchViewModel viewModel) {
     return Row(
@@ -101,40 +86,49 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             if (viewModel.currentState != SearchState.initial)
               IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22), 
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: 22,
+                ),
                 padding: const EdgeInsets.only(right: 12),
                 constraints: const BoxConstraints(),
                 onPressed: () {
                   _searchController.clear();
                   viewModel.resetSearch();
                   _searchFocusNode.unfocus();
-                }
+                },
               ),
             const Text(
               'NARATIA',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -1.0, color: Colors.white),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1.0,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
         IconButton(
-          icon: const Icon(Icons.notifications_none, color: Colors.white, size: 22), 
+          icon: const Icon(
+            Icons.notifications_none,
+            color: Colors.white,
+            size: 22,
+          ),
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const NotificationScreen()),
-            // );
-          }
+            // Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen()));
+          },
         ),
       ],
     );
   }
->>>>>>> Stashed changes
-  
+
   Widget _buildSearchBar(SearchViewModel viewModel) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(26), 
-        borderRadius: BorderRadius.circular(20), 
+        color: Colors.white.withAlpha(26),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white.withAlpha(51)),
         boxShadow: [
           BoxShadow(
@@ -151,7 +145,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: TextField(
             controller: _searchController,
             focusNode: _searchFocusNode,
-            style: const TextStyle(color: Colors.white, fontSize: 14), 
+            style: const TextStyle(color: Colors.white, fontSize: 14),
             onSubmitted: (value) {
               viewModel.submitSearch(value);
               _searchFocusNode.unfocus();
@@ -161,7 +155,10 @@ class _SearchScreenState extends State<SearchScreen> {
               hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
               prefixIcon: Icon(Icons.search, color: Colors.grey, size: 20),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16), 
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 14,
+                horizontal: 16,
+              ),
             ),
           ),
         ),
@@ -184,21 +181,38 @@ class _SearchScreenState extends State<SearchScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     int columns = screenWidth > 800 ? 5 : (screenWidth > 600 ? 3 : 2);
 
-<<<<<<< Updated upstream
-    // 🟢 LIST GENRE LANGSUNG DI SINI BIAR PAS LAYARNYA DAN NYAMBUNG KE 14 GENRE
-=======
->>>>>>> Stashed changes
     final List<Map<String, String>> daftarGenreLengkap = [
-      {'name': 'Romantis', 'img': 'https://picsum.photos/seed/romantis/300/200'},
+      {
+        'name': 'Romantis',
+        'img': 'https://picsum.photos/seed/romantis/300/200',
+      },
       {'name': 'Fantasi', 'img': 'https://picsum.photos/seed/fantasi/300/200'},
-      {'name': 'Kehidupan', 'img': 'https://picsum.photos/seed/kehidupan/300/200'},
+      {
+        'name': 'Kehidupan',
+        'img': 'https://picsum.photos/seed/kehidupan/300/200',
+      },
       {'name': 'Horor', 'img': 'https://picsum.photos/seed/horor/300/200'},
-      {'name': 'Fanfiction', 'img': 'https://picsum.photos/seed/fanfiction/300/200'},
+      {
+        'name': 'Fanfiction',
+        'img': 'https://picsum.photos/seed/fanfiction/300/200',
+      },
       {'name': 'Drama', 'img': 'https://picsum.photos/seed/drama/300/200'},
-      {'name': 'Detektif', 'img': 'https://picsum.photos/seed/detektif/300/200'},
-      {'name': 'Petualangan', 'img': 'https://picsum.photos/seed/petualangan/300/200'},
-      {'name': 'Thriller', 'img': 'https://picsum.photos/seed/thriller/300/200'},
-      {'name': 'Fiksi Remaja', 'img': 'https://picsum.photos/seed/fiksiremaja/300/200'},
+      {
+        'name': 'Detektif',
+        'img': 'https://picsum.photos/seed/detektif/300/200',
+      },
+      {
+        'name': 'Petualangan',
+        'img': 'https://picsum.photos/seed/petualangan/300/200',
+      },
+      {
+        'name': 'Thriller',
+        'img': 'https://picsum.photos/seed/thriller/300/200',
+      },
+      {
+        'name': 'Fiksi Remaja',
+        'img': 'https://picsum.photos/seed/fiksiremaja/300/200',
+      },
       {'name': 'Komedi', 'img': 'https://picsum.photos/seed/komedi/300/200'},
       {'name': 'Aksi', 'img': 'https://picsum.photos/seed/aksi/300/200'},
       {'name': 'Sci-Fi', 'img': 'https://picsum.photos/seed/scifi/300/200'},
@@ -208,17 +222,25 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('PENCARIAN POPULER', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 2.0)),
+        const Text(
+          'PENCARIAN POPULER',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+            letterSpacing: 2.0,
+          ),
+        ),
         const SizedBox(height: 20),
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 20),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: columns, 
-            crossAxisSpacing: 16, 
-            mainAxisSpacing: 16, 
-            childAspectRatio: 2.2, 
+            crossAxisCount: columns,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 2.2,
           ),
           itemCount: daftarGenreLengkap.length,
           itemBuilder: (context, index) {
@@ -227,17 +249,13 @@ class _SearchScreenState extends State<SearchScreen> {
             return GestureDetector(
               onTap: () {
                 _searchController.text = genre['name']!;
-<<<<<<< Updated upstream
-                viewModel.selectKeyword(genre['name']!, isGenre: true);
-=======
                 viewModel.submitSearch(genre['name']!);
->>>>>>> Stashed changes
                 _searchFocusNode.unfocus();
               },
               child: PhysicalModel(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(15),
-                elevation: 6, 
+                elevation: 6,
                 shadowColor: Colors.black.withAlpha(180),
                 child: Container(
                   decoration: BoxDecoration(
@@ -245,19 +263,22 @@ class _SearchScreenState extends State<SearchScreen> {
                     image: DecorationImage(
                       image: NetworkImage(genre['img']!),
                       fit: BoxFit.cover,
-                      colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.darken),
+                      colorFilter: const ColorFilter.mode(
+                        Colors.black54,
+                        BlendMode.darken,
+                      ),
                     ),
                     border: Border.all(color: Colors.white.withAlpha(26)),
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    genre['name']!.toUpperCase(), 
+                    genre['name']!.toUpperCase(),
                     style: const TextStyle(
-                      color: Colors.white, 
-                      fontSize: 12, 
-                      fontWeight: FontWeight.w800, 
-                      letterSpacing: 1.2
-                    )
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                    ),
                   ),
                 ),
               ),
@@ -272,7 +293,15 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('PENCARIAN SEBELUMNYA', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 2.0)),
+        const Text(
+          'PENCARIAN SEBELUMNYA',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+            letterSpacing: 2.0,
+          ),
+        ),
         const SizedBox(height: 12),
         ListView.separated(
           shrinkWrap: true,
@@ -281,22 +310,22 @@ class _SearchScreenState extends State<SearchScreen> {
           itemCount: viewModel.history.length,
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
+            final keyword = viewModel.history[index];
+
             return InkWell(
               onTap: () {
-<<<<<<< Updated upstream
-                _searchController.text = viewModel.history[index];
-                viewModel.selectKeyword(viewModel.history[index]);
-=======
                 _searchController.text = keyword;
-                viewModel.submitSearch(keyword); 
->>>>>>> Stashed changes
+                viewModel.submitSearch(keyword);
                 _searchFocusNode.unfocus();
               },
               borderRadius: BorderRadius.circular(10),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), 
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(13), 
+                  color: Colors.white.withAlpha(13),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.white.withAlpha(13)),
                 ),
@@ -304,7 +333,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     const Icon(Icons.history, color: Colors.grey, size: 18),
                     const SizedBox(width: 12),
-                    Text(viewModel.history[index], style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                    Text(
+                      keyword,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -321,7 +356,12 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         Text(
           viewModel.resultTitle.toUpperCase(),
-          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.indigoAccent, letterSpacing: 2.0),
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+            color: Colors.indigoAccent,
+            letterSpacing: 2.0,
+          ),
         ),
         const SizedBox(height: 16),
         ListView(
@@ -329,64 +369,124 @@ class _SearchScreenState extends State<SearchScreen> {
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 20),
           children: [
-            _buildResultCard('A THEORY DREAMING', 'AYA_REID', 'Freya menyimpan rahasia kutukan...', 'https://picsum.photos/seed/search_result1/300/400', ['ROMANTIS', 'FANTASI']),
+            _buildResultCard(
+              'A THEORY DREAMING',
+              'AYA_REID',
+              'Freya menyimpan rahasia kutukan...',
+              'https://picsum.photos/seed/search_result1/300/400',
+              ['ROMANTIS', 'FANTASI'],
+            ),
             const SizedBox(height: 12),
-            _buildResultCard('WHAT SHOULD BE WILD', 'JULIA_FINE', 'Kekuatan aneh di dalam hutan...', 'https://picsum.photos/seed/search_result2/300/400', ['MISTERI']),
+            _buildResultCard(
+              'WHAT SHOULD BE WILD',
+              'JULIA_FINE',
+              'Kekuatan aneh di dalam hutan...',
+              'https://picsum.photos/seed/search_result2/300/400',
+              ['MISTERI'],
+            ),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildResultCard(String title, String author, String desc, String imgUrl, List<String> tags) {
+  Widget _buildResultCard(
+    String title,
+    String author,
+    String desc,
+    String imgUrl,
+    List<String> tags,
+  ) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => DetailScreen(
-              title: title, 
-              imagePath: imgUrl, 
-<<<<<<< Updated upstream
-=======
-              authorName: author, 
->>>>>>> Stashed changes
+              title: title,
+              imagePath: imgUrl,
+              authorName: author,
             ),
           ),
         );
       },
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.white.withAlpha(13), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withAlpha(26))),
+        decoration: BoxDecoration(
+          color: Colors.white.withAlpha(13),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withAlpha(26)),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8), 
-              child: Image.network(imgUrl, width: 60, height: 90, fit: BoxFit.cover) 
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                imgUrl,
+                width: 60,
+                height: 90,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14), maxLines: 1),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    maxLines: 1,
+                  ),
                   const SizedBox(height: 2),
-                  Text(author, style: const TextStyle(color: Colors.indigoAccent, fontSize: 11, fontWeight: FontWeight.w600)),
+                  Text(
+                    author,
+                    style: const TextStyle(
+                      color: Colors.indigoAccent,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
-                    spacing: 6, 
-                    children: tags.map((tag) => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3), 
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)), 
-                      child: Text(tag, style: const TextStyle(color: Colors.black, fontSize: 8, fontWeight: FontWeight.w900))
-                    )).toList()
+                    spacing: 6,
+                    children: tags
+                        .map(
+                          (tag) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              tag,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 8,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                   const SizedBox(height: 6),
-                  Text(desc, style: const TextStyle(color: Colors.grey, fontSize: 11), maxLines: 2),
+                  Text(
+                    desc,
+                    style: const TextStyle(color: Colors.grey, fontSize: 11),
+                    maxLines: 2,
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

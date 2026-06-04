@@ -3,7 +3,7 @@ import 'login_screen.dart';
 import '../../services/api_service.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -43,10 +43,10 @@ void dispose() {
       ),
 
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-
-          child: Column(
+  child: SingleChildScrollView(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
@@ -196,50 +196,51 @@ SizedBox(
   height: 48,
   child: ElevatedButton(
     onPressed: () async {
-      final username = _usernameController.text.trim();
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
+    final username = _usernameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-      if (username.isEmpty ||
-          email.isEmpty ||
-          password.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Semua field wajib diisi'),
-          ),
-        );
-        return;
-      }
+    if (username.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Semua field wajib diisi'),
+        ),
+      );
+      return;
+    }
 
-      final success = await ApiService.register(
-        username,
-        email,
-        password,
+    // Simpan messenger sebelum async (best practice 🔥)
+    final messenger = ScaffoldMessenger.of(context);
+
+    final success = await ApiService.register(
+      username,
+      email,
+      password,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Registrasi berhasil'),
+        ),
       );
 
-      if (!mounted) return;
-
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registrasi berhasil'),
-          ),
-        );
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const LoginScreen(),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registrasi gagal'),
-          ),
-        );
-      }
-    },
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ),
+      );
+    } else {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Registrasi gagal'),
+        ),
+      );
+    }
+  },
     style: ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFF7B2CBF),
       shape: RoundedRectangleBorder(
@@ -256,10 +257,11 @@ SizedBox(
     ),
   ),
 ),
-            ],
+                        ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

@@ -21,17 +21,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File? _imageFile;
   String? imagePath;
 
-<<<<<<< Updated upstream
   // ================= LOAD IMAGE =================
   Future<void> loadImage() async {
     final prefs = await SharedPreferences.getInstance();
     final path = prefs.getString('profile_image');
 
-=======
-  Future<void> loadImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final path = prefs.getString('profile_image');
->>>>>>> Stashed changes
     if (path != null && path.isNotEmpty) {
       setState(() {
         imagePath = path;
@@ -60,7 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text(
                   '@${profileVM.username}',
-<<<<<<< Updated upstream
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -72,18 +65,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 24),
 
                 // ================= FOTO PROFILE =================
-=======
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1.2),
-                ),
-                const SizedBox(height: 24),
-
-                // Foto Profil
->>>>>>> Stashed changes
                 Container(
                   padding: const EdgeInsets.all(4), 
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-<<<<<<< Updated upstream
                     gradient: const LinearGradient(
                       colors: [Color(0xFF6A1B9A), Color(0xFF1976D2)], 
                       begin: Alignment.topLeft,
@@ -97,17 +82,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         offset: const Offset(0, 4),
                       ),
                     ],
-=======
-                    gradient: const LinearGradient(colors: [Color(0xFF6A1B9A), Color(0xFF1976D2)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                    boxShadow: [BoxShadow(color: Colors.purpleAccent.withAlpha(80), blurRadius: 20, spreadRadius: 2, offset: const Offset(0, 4))],
->>>>>>> Stashed changes
                   ),
                   child: CircleAvatar(
                     radius: 50,
                     backgroundColor: const Color(0xFF1E1E1E), 
                     child: ClipOval(
                       child: _imageFile != null
-<<<<<<< Updated upstream
                           ? kIsWeb
                               ? Image.network(
                                   _imageFile!.path,
@@ -134,23 +114,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-=======
-                          ? kIsWeb ? Image.network(_imageFile!.path, width: 100, height: 100, fit: BoxFit.cover)
-                                   : Image.file(_imageFile!, width: 100, height: 100, fit: BoxFit.cover)
-                          : const Icon(Icons.person, size: 40, color: Colors.white54),
-                    ),
->>>>>>> Stashed changes
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text(profileVM.name, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 16),
-                Container(width: 40, height: 3, decoration: BoxDecoration(color: Colors.white.withAlpha(50), borderRadius: BorderRadius.circular(10))),
+                
                 const SizedBox(height: 16),
 
-<<<<<<< Updated upstream
                 // ================= PEMISAH MINIMALIS =================
-                const SizedBox(height: 16),
                 Container(
                   width: 40,
                   height: 3,
@@ -159,18 +128,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                
                 const SizedBox(height: 16),
 
                 // ================= BIO =================
-=======
-                // Bio
->>>>>>> Stashed changes
                 Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-<<<<<<< Updated upstream
                         const Text(
                           'Bio',
                           style: TextStyle(
@@ -189,19 +155,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             );
 
-=======
-                        const Text('Bio', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () async {
-                            await Navigator.push(context, MaterialPageRoute(builder: (_) => const EditProfileScreen()));
->>>>>>> Stashed changes
                             if (mounted) {
                               context.read<ProfileViewModel>().loadUser();
                               loadImage(); 
                             }
                           },
-<<<<<<< Updated upstream
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
@@ -231,25 +189,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 1.5,
                         ),
                       ),
-=======
-                          child: Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: Colors.white.withAlpha(26), shape: BoxShape.circle), child: const Icon(Icons.edit, size: 14, color: Colors.white70)),
-                        ),
-                      ],
->>>>>>> Stashed changes
                     ),
-                    const SizedBox(height: 10),
-                    Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: Text(profileVM.bio.isNotEmpty ? profileVM.bio : 'Tambahkan bio...', textAlign: TextAlign.center, style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.5))),
                   ],
                 ),
-                const SizedBox(height: 30),
 
-<<<<<<< Updated upstream
                 const SizedBox(height: 30),
 
                 // ================= FOLLOW INFO =================
-=======
-                // Info Followers
->>>>>>> Stashed changes
                 Align(
                   alignment: Alignment.center,
                   child: ClipRRect(
@@ -259,7 +205,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Container(
                         width: 280, 
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-<<<<<<< Updated upstream
                         decoration: BoxDecoration(
                           color: Colors.white.withAlpha(15),
                           borderRadius: BorderRadius.circular(16),
@@ -382,7 +327,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: EdgeInsets.zero, 
                       ),
                       onPressed: () async {
-                        
                         final result = await showDialog<bool>(
                           context: context,
                           builder: (context) {
@@ -395,7 +339,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   padding: const EdgeInsets.all(28),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF161224), 
-                                    borderRadius: BorderRadius.circular(24), // Sudut elegan
+                                    borderRadius: BorderRadius.circular(24), 
                                     border: Border.all(color: Colors.purpleAccent.withAlpha(80), width: 1.5), 
                                     boxShadow: [
                                       BoxShadow(
@@ -448,7 +392,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       
                                       const SizedBox(height: 12),
                                       
-                                      // 🟢 Tombol BATAL
+                                      // Tombol BATAL
                                       SizedBox(
                                         width: double.infinity,
                                         height: 45,
@@ -470,94 +414,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         if (result != true) return;
 
-                        final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-
-                        await authViewModel.logout();
-
                         if (context.mounted) {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            '/welcome',
-                            (route) => false,
-                          );
+                          final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+                          await authViewModel.logout();
+                          
+                          if (context.mounted) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/welcome',
+                              (route) => false,
+                            );
+                          }
                         }
                       },
                     ),
                   ),
                 ),
                 
-=======
-                        decoration: BoxDecoration(color: Colors.white.withAlpha(15), borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withAlpha(26))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(children: [const Text('0', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)), const SizedBox(height: 2), Text('Pengikut', style: TextStyle(color: Colors.white.withAlpha(150), fontSize: 11, fontWeight: FontWeight.w500))]),
-                            Container(height: 25, width: 1, color: Colors.white.withAlpha(51)),
-                            Column(children: [const Text('0', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)), const SizedBox(height: 2), Text('Mengikuti', style: TextStyle(color: Colors.white.withAlpha(150), fontSize: 11, fontWeight: FontWeight.w500))]),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-
-                // Tombol Pengaturan
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withAlpha(51), blurRadius: 10, offset: const Offset(0, 4))]),
-                    width: 200, height: 40, 
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.settings, color: Colors.black87, size: 18),
-                      label: const Text('Pengaturan', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600, fontSize: 13)),
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFD9D9D9), elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), padding: EdgeInsets.zero),
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10), 
-
-                // Tombol Logout Formal
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withAlpha(51), blurRadius: 10, offset: const Offset(0, 4))]),
-                    width: 200, height: 40, 
-                    child: ElevatedButton.icon(
-                      icon: const Icon(Icons.logout, color: Colors.redAccent, size: 18),
-                      label: const Text('Keluar Akun', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600, fontSize: 13)),
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFD9D9D9), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), padding: EdgeInsets.zero),
-                      onPressed: () async {
-                        final result = await showDialog<bool>(
-                          context: context,
-                          builder: (context) {
-                            return BackdropFilter(filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8), 
-                              child: Dialog(backgroundColor: Colors.transparent, elevation: 0,
-                                child: Container(padding: const EdgeInsets.all(28), decoration: BoxDecoration(color: const Color(0xFF161224), borderRadius: BorderRadius.circular(24), border: Border.all(color: Colors.purpleAccent.withAlpha(80), width: 1.5)),
-                                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                                    const Text('Konfirmasi Keluar', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                                    const SizedBox(height: 12),
-                                    Text('Apakah Anda yakin ingin keluar dari akun ini?', textAlign: TextAlign.center, style: TextStyle(color: Colors.white.withAlpha(180), fontSize: 14, height: 1.5)),
-                                    const SizedBox(height: 28),
-                                    SizedBox(width: double.infinity, height: 45, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF8A2BE2), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), elevation: 0), onPressed: () => Navigator.pop(context, true), child: const Text('Keluar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)))),
-                                    const SizedBox(height: 12),
-                                    SizedBox(width: double.infinity, height: 45, child: TextButton(style: TextButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: () => Navigator.pop(context, false), child: const Text('Batal', style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold, fontSize: 14)))),
-                                  ]),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                        if (result == true) {
-                          await Provider.of<AuthViewModel>(context, listen: false).logout();
-                          if (context.mounted) Navigator.pushNamedAndRemoveUntil(context, '/welcome', (route) => false);
-                        }
-                      },
-                    ),
-                  ),
-                ),
->>>>>>> Stashed changes
                 const SizedBox(height: 20),
               ],
             ),

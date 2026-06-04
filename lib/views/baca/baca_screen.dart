@@ -1,56 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart'; 
+import '../../services/api_service.dart'; 
 
-class BacaScreen extends StatelessWidget {
-  final String title;
-  final bool isFromLibrary; // Penentu dari mana layar ini dibuka
+class BacaScreen extends StatefulWidget {
+  final int storyId;
+  final String storyTitle;
+  final String coverUrl;
+  final String token;
+  final bool isFromLibrary; 
 
   const BacaScreen({
-    super.key, 
-    required this.title,
-    this.isFromLibrary = false, // Default-nya false (munculin popup)
+    super.key,
+    required this.storyId,
+    required this.storyTitle,
+    required this.coverUrl,
+    required this.token,
+    this.isFromLibrary = false, 
   });
 
-  // Fungsi untuk memunculkan popup dialog
-  void _tampilkanDialogSimpan(BuildContext context) {
+  @override
+  State<BacaScreen> createState() => _BacaScreenState();
+}
+
+class _BacaScreenState extends State<BacaScreen> {
+  final ApiService _apiService = ApiService();
+  List<dynamic> _chapters = [];
+  int _currentChapterIndex = 0; 
+  bool _isLoading = true;
+  bool _isLiked = false; 
+
+  @override
+  void initState() {
+    super.initState();
+    _loadChaptersData();
+  }
+
+  Future<void> _loadChaptersData() async {
+    setState(() => _isLoading = true);
+    final data = await _apiService.fetchChapters(widget.storyId, widget.token);
+    
+    if (data != null && data.isNotEmpty) {
+      setState(() {
+        _chapters = data;
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _chapters = [{'chapter_number': 1, 'title': 'BAB 1', 'content': 'Teks cerita contoh...'}];
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _showSaveToLibraryDialog() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      barrierDismissible: false, 
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: const Color(0xFF1E1E1E), 
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: const Text("Simpan ke Perpustakaan?", style: TextStyle(color: Colors.white)),
-          content: const Text(
-            "Simpan cerita ini ke daftar koleksi perpustakaan Anda untuk dibaca nanti.",
-            style: TextStyle(color: Colors.white70),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: const Text("Simpan ke Library?", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          content: const Text("Apakah kamu ingin menyimpan cerita ini ke perpustakaan sebelum keluar?", style: TextStyle(color: Colors.white70, fontSize: 14)),
           actions: [
-            // Tombol Keluar
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Tutup dialog
-                Navigator.pop(context); // Keluar layar baca
+                Navigator.pop(dialogContext); 
+                Navigator.pop(context);      
               },
-              child: const Text("Keluar Saja", style: TextStyle(color: Colors.grey)),
+              child: const Text("Tidak", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
             ),
-            // Tombol Simpan
             ElevatedButton(
-              onPressed: () {
-                // TODO: Nanti fungsi panggil API ditaruh di sini
-                
-                Navigator.pop(context); // Tutup dialog
-                
-                // Munculin notifikasi kecil sukses
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Berhasil disimpan ke Perpustakaan! 📚"),
-                    backgroundColor: Color(0xFF610094),
-                  ),
-                );
-                
-                Navigator.pop(context); // Keluar layar baca
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF610094), 
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () async {
+                Navigator.pop(dialogContext); 
+                bool success = await _apiService.addToLibrary(token: widget.token, storyId: widget.storyId);
+                if (success && mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cerita berhasil ditambahkan ke Library! 🎉"), backgroundColor: Colors.green));
+                }
+                if (mounted) Navigator.pop(context); 
               },
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF610094)),
-              child: const Text("Simpan", style: TextStyle(color: Colors.white)),
+              child: const Text("Iya", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -58,16 +91,86 @@ class BacaScreen extends StatelessWidget {
     );
   }
 
+  void _showCommentBottomSheet() {
+    TextEditingController commentController = TextEditingController();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF1E1E1E),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, top: 20, left: 16, right: 16),
+          child: SizedBox(
+            height: 400,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(child: SizedBox(width: 40, height: 5, child: DecoratedBox(decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.all(Radius.circular(10)))))),
+                const SizedBox(height: 15),
+                const Text("Komentar Bab Ini", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: FutureBuilder<List<dynamic>?>(
+                    future: _apiService.fetchComments(widget.storyId, widget.token),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator(color: Colors.purple));
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text("Belum ada komentar.", style: TextStyle(color: Colors.grey)));
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final komen = snapshot.data![index];
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(komen['user']?['username'] ?? 'Pembaca', style: const TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold)),
+                            subtitle: Text(komen['content'] ?? '', style: const TextStyle(color: Colors.white70)),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: commentController,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            hintText: "Tulis komentar...",
+                            hintStyle: const TextStyle(color: Colors.grey),
+                            filled: true, 
+                            fillColor: Colors.white10,
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(25), borderSide: BorderSide.none),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.send, color: Color(0xFF610094)),
+                        onPressed: () async {
+                          if (commentController.text.isNotEmpty) {
+                            await _apiService.storeComment(token: widget.token, storyId: widget.storyId, content: commentController.text);
+                            commentController.clear();
+                            if (context.mounted) Navigator.pop(context);
+                            _showCommentBottomSheet(); 
+                          }
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-<<<<<<< Updated upstream
-    // PopScope menahan tombol back fisik Android
-    return PopScope(
-      canPop: isFromLibrary, 
-      onPopInvoked: (didPop) {
-        if (didPop) return;
-        _tampilkanDialogSimpan(context);
-=======
     final currentChapter = _chapters.isNotEmpty ? _chapters[_currentChapterIndex] : null;
 
     return PopScope(
@@ -75,7 +178,6 @@ class BacaScreen extends StatelessWidget {
       onPopInvoked: (didPop) {
         if (didPop) return;
         _showSaveToLibraryDialog();
->>>>>>> Stashed changes
       },
       child: Scaffold(
         backgroundColor: const Color(0xFF121212),
@@ -84,64 +186,6 @@ class BacaScreen extends StatelessWidget {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-<<<<<<< Updated upstream
-            onPressed: () {
-              // Cek kalau dari library langsung keluar, kalau nggak tampilkan dialog
-              if (isFromLibrary) {
-                Navigator.pop(context);
-              } else {
-                _tampilkanDialogSimpan(context);
-              }
-            },
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            // Judul Buku
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Text(
-                title.toUpperCase(),
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ),
-            
-            // Teks Cerita (Lorem Ipsum)
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-                child: const Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\n"
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n\n"
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                  style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.8),
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-            ),
-
-            // Bottom Bar (Like, Komen, Share)
-            Container(
-              height: 60,
-              decoration: const BoxDecoration(color: Color(0xFF610094)), // Ungu Pekat
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(icon: const Icon(Icons.favorite_border, color: Colors.white), onPressed: () {}),
-                  IconButton(icon: const Icon(Icons.chat_bubble_outline, color: Colors.white), onPressed: () {}),
-                  IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () {}),
-                ],
-              ),
-            ),
-          ],
-        ),
-=======
             onPressed: () => widget.isFromLibrary ? Navigator.pop(context) : _showSaveToLibraryDialog(),
           ),
           actions: [
@@ -224,7 +268,6 @@ class BacaScreen extends StatelessWidget {
                   ),
                 ],
               ),
->>>>>>> Stashed changes
       ),
     );
   }

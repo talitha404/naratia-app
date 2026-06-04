@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/library_viewmodel.dart';
-import '../baca/baca_screen.dart';
+import '../baca/baca_screen.dart'; 
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -26,14 +26,14 @@ class LibraryScreen extends StatelessWidget {
             child: SizedBox(
               width: 360,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
                 child: GridView.builder(
                   itemCount: viewModel.stories.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, 
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 20,
-                    childAspectRatio: 0.65,
+                    crossAxisSpacing: 14,
+                    mainAxisSpacing: 14,
+                    childAspectRatio: 0.68,
                   ),
                   itemBuilder: (context, index) {
                     final story = viewModel.stories[index];
@@ -42,13 +42,17 @@ class LibraryScreen extends StatelessWidget {
                       onTap: () {
                         viewModel.selectStory(story);
 
-                        // Berpindah ke Halaman Baca dan mengirimkan judul cerita
+                        // Navigator langsung menuju BacaScreen tanpa membawa authorName
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BacaScreen(
-                              title: story.title,
-                              // 🟢 isAlreadyInLibrary SUDAH DIHAPUS BIAR NGGAK ERROR
+                              storyId: story.id ?? 1,         
+                              storyTitle: story.title,
+                              coverUrl: story.image,
+                              token: '',                      // Kosongkan atau isi jika token disimpan di session
+                              isFromLibrary: true,            // KUNCI UTAMA: Supaya tidak muncul pop-up simpan saat keluar
+                              // ✂️ Baris authorName di sini sudah resmi dibuang!
                             ),
                           ),
                         );
@@ -60,15 +64,17 @@ class LibraryScreen extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.grey[800],
-                                borderRadius: BorderRadius.circular(6),
+                                borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
-                                  image: NetworkImage(story.image),
+                                  image: story.image.startsWith('http')
+                                      ? NetworkImage(story.image) as ImageProvider
+                                      : AssetImage(story.image) as ImageProvider,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           // Teks Judul
                           Center(
                             child: Text(
@@ -78,7 +84,8 @@ class LibraryScreen extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 11,
+                                fontSize: 12,
+                                height: 1.3,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

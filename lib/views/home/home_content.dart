@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../notification/notification_screen.dart';
-// 🔥 Tambahin import untuk halaman detail
 import '../detail/detail_screen.dart'; 
 import '../../viewmodels/library_viewmodel.dart';
 
@@ -14,7 +13,10 @@ class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(
+  horizontal: 16,
+  vertical: 20,
+),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,8 +33,10 @@ class HomeContent extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.notifications_none, color: Colors.white),
+              Padding(
+  padding: const EdgeInsets.only(right: 4),
+  child: IconButton(
+    icon: const Icon(Icons.notifications_none, color: Colors.white),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -42,17 +46,18 @@ class HomeContent extends StatelessWidget {
                   );
                 },
               ),
+                ),
             ],
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
 
           // ================= CERITA UNGGULAN =================
           const Text(
             'Cerita unggulan',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -67,13 +72,13 @@ class HomeContent extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => const DetailScreen(
                     title: 'What Should be Wild',
-                    imagePath: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500',
+                    imagePath: 'assets/images/book1.png',
                   ),
                 ),
               );
             },
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xFF1E1E1E),
                 borderRadius: BorderRadius.circular(16),
@@ -82,29 +87,32 @@ class HomeContent extends StatelessWidget {
                 children: [
                   Container(
                     width: 90,
-                    height: 130,
+                    height: 125,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       image: const DecorationImage(
-                        image: NetworkImage(
-                          'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
+  image: AssetImage(
+    'assets/images/book1.png',
+  ),
+  fit: BoxFit.cover,
+),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'What Should be Wild',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+  'What Should be Wild',
+  maxLines: 2,
+  overflow: TextOverflow.ellipsis,
+  style: TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  ),
+),
                         const SizedBox(height: 6),
                         const Text(
                           'Julia Fine',
@@ -136,16 +144,20 @@ class HomeContent extends StatelessWidget {
                 'Lanjut baca',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
-                onPressed: () {
-                  onNavigate?.call(1);
-                },
-              ),
+              GestureDetector(
+  onTap: () {
+    onNavigate?.call(1);
+  },
+  child: const Icon(
+    Icons.arrow_forward_ios,
+    color: Colors.white,
+    size: 18,
+  ),
+),
             ],
           ),
 
@@ -153,7 +165,7 @@ class HomeContent extends StatelessWidget {
 
           // 🔥 LIST DARI VIEWMODEL
           SizedBox(
-            height: 200,
+            height: 170,
             child: Consumer<LibraryViewModel>(
               builder: (context, vm, _) {
                 // ✅ FILTER buang "What Should Be Wild" + ambil 3
@@ -185,47 +197,48 @@ class HomeContent extends StatelessWidget {
             'Bacaan trending',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.65,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.72,
             children: const [
               _TrendingCard(
                 title: 'Takdir Terindah',
                 views: '12K',
                 rank: '#1',
-                image: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500',
+                image: 'assets/images/book5.png',
               ),
               _TrendingCard(
                 title: 'Tentang Semesta',
                 views: '9K',
                 rank: '#2',
-                image: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=500',
+                image: 'assets/images/book6.png',
               ),
               _TrendingCard(
                 title: 'Nightfall',
                 views: '8K',
                 rank: '#3',
-                image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=500',
+                image: 'assets/images/book7.png',
               ),
               _TrendingCard(
                 title: 'Silent Moon',
                 views: '7K',
                 rank: '#4',
-                image: 'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=500',
+                image: 'assets/images/book8.png',
               ),
             ],
           ),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -235,7 +248,7 @@ class HomeContent extends StatelessWidget {
 // ================= TAG =================
 Widget _tag(String text) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
     decoration: BoxDecoration(
       border: Border.all(color: Colors.white),
       borderRadius: BorderRadius.circular(20),
@@ -259,7 +272,6 @@ class _BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 🔥 BUNGKUS DENGAN GESTURE DETECTOR
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -273,17 +285,17 @@ class _BookCard extends StatelessWidget {
         );
       },
       child: Container(
-        width: 120,
-        margin: const EdgeInsets.only(right: 12),
+        width: 95,
+        margin: const EdgeInsets.only(right: 16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               height: 130,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(image),
+                  image: AssetImage(image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -291,13 +303,15 @@ class _BookCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
+              textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                height: 1.3,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
@@ -336,7 +350,7 @@ class _TrendingCard extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: const Color(0xFF1E1E1E),
           borderRadius: BorderRadius.circular(16),
@@ -346,21 +360,22 @@ class _TrendingCard extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  image, 
-                  fit: BoxFit.cover,
-                ),
+                child: Image.asset(
+  image,
+  fit: BoxFit.cover,
+)
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+  title,
+  textAlign: TextAlign.center,
+  style: const TextStyle(
+    color: Colors.white,
+    fontSize: 13,
+    fontWeight: FontWeight.bold,
+  ),
+),
             const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

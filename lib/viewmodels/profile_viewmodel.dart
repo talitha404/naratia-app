@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileViewModel extends ChangeNotifier {
@@ -90,4 +91,81 @@ class ProfileViewModel extends ChangeNotifier {
     _bio = bio;
     notifyListeners();
   }
+
+  Future<bool> updateProfile(
+  String username,
+  String name,
+  String bio,
+) async {
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  final token =
+      prefs.getString('token');
+
+  if (token == null) {
+    return false;
+  }
+
+  final result =
+      await ApiService.updateProfile(
+    token,
+    username,
+    name,
+    bio,
+  );
+
+  if (result != null) {
+    final user = result['user'];
+
+    _username =
+        user['username'] ?? '';
+
+    _name =
+        user['name'] ?? '';
+
+    _bio =
+        user['bio'] ?? '';
+
+    await prefs.setString(
+      'username',
+      _username,
+    );
+
+    await prefs.setString(
+      'name',
+      _name,
+    );
+
+    await prefs.setString(
+      'bio',
+      _bio,
+    );
+
+    notifyListeners();
+
+    return true;
+  }
+
+  return false;
+}
+
+Future<bool> sendFeedback(
+  String message,
+) async {
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  final token =
+      prefs.getString('token');
+
+  if (token == null) {
+    return false;
+  }
+
+  return await ApiService.sendFeedback(
+    token,
+    message,
+  );
+}
 }

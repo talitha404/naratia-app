@@ -70,7 +70,7 @@ Future<bool> login(
   }
 
   /// SAVE TOKEN (PRIVATE)
-  Future<void> _saveToken(String token) async {
+  Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
   }
@@ -82,13 +82,15 @@ Future<bool> login(
   }
 
   /// LOGOUT
-  Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
+Future<void> logout() async {
+  final prefs = await SharedPreferences.getInstance();
 
-    _token = null;
-    notifyListeners();
-  }
+  await prefs.clear();
+
+  _token = null;
+
+  notifyListeners();
+}
 
   /// HELPER LOADING
   void _setLoading(bool value) {

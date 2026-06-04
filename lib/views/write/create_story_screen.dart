@@ -1,6 +1,13 @@
 // isi metadata cerita
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'editor_screen.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import '../../viewmodels/write_story_viewmodel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateStoryScreen extends StatefulWidget {
   const CreateStoryScreen({super.key});
@@ -16,6 +23,8 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   String? _selectedGenre;
+  File? _selectedImage;
+final ImagePicker _picker = ImagePicker();
 
   // Daftar Genre (Contoh)
   final List<String> _genres = ['Romance', 'Fantasy', 'Horror', 'Sci-Fi', 'Action', 'Mystery'];
@@ -29,68 +38,77 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF141313), // Warna background Naratia
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Buat Cerita',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        centerTitle: true,
+  return Scaffold(
+    backgroundColor: const Color(0xFF141313),
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+        onPressed: () => Navigator.pop(context),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 40), // ⬅️ tambahin bottom padding
-            child: Form(
-            key: _formKey,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                // 1. Input Judul Cerita
-                _buildLabel('Judul Cerita'),
-                _buildTextField(
-                    controller: _titleController,
-                    hint: 'Masukkan judul cerita...',
-                ),
-                const SizedBox(height: 20),
+      title: const Text(
+        'Buat Cerita',
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+      centerTitle: true,
+    ),
+    body: SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. Input Judul Cerita
+              _buildLabel('Judul Cerita'),
+              _buildTextField(
+                controller: _titleController,
+                hint: 'Masukkan judul cerita...',
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Judul tidak boleh kosong';
+                  }
+                  if (value.trim().length < 3) {
+                    return 'Judul minimal 3 karakter';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
 
-                // 2. Input Pilih Genre
-                _buildLabel('Pilih Genre'),
-                _buildDropdownField(),
-                const SizedBox(height: 20),
+              // 2. Input Pilih Genre
+              _buildLabel('Pilih Genre'),
+              _buildDropdownField(),
+              const SizedBox(height: 20),
 
-                // 3. Input Deskripsi Singkat
-                _buildLabel('Deskripsi Singkat'),
-                _buildTextField(
-                    controller: _descController,
-                    hint: 'Tulis sinopsis atau deskripsi singkat...',
-                    maxLines: 5,
-                ),
-                const SizedBox(height: 20),
+              // 3. Input Deskripsi Singkat
+              _buildLabel('Deskripsi Singkat'),
+              _buildTextField(
+                controller: _descController,
+                hint: 'Tulis sinopsis atau deskripsi singkat...',
+                maxLines: 5,
+              ),
+              const SizedBox(height: 20),
 
-                // 4. Area Unggah Cover
-                _buildLabel('Unggah Cover'),
-                _buildUploadCoverBox(),
+              // 4. Area Unggah Cover
+              _buildLabel('Unggah Cover'),
+              _buildUploadCoverBox(),
 
-                const SizedBox(height: 40),
+              const SizedBox(height: 40),
 
-                // 5. Tombol Lanjutkan Menulis
-                _buildSubmitButton(),
+              // 5. Tombol Lanjutkan Menulis
+              _buildSubmitButton(),
 
-                const SizedBox(height: 20), // ⬅️ extra ruang biar aman dari gesture bar
+              const SizedBox(height: 20),
             ],
-             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   // Widget Helper: Label Teks
   Widget _buildLabel(String text) {
@@ -112,10 +130,12 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     required TextEditingController controller,
     required String hint,
     int maxLines = 1,
+    String? Function(String?)? validator,
   }) {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
+      validator: validator,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         filled: true,
@@ -125,11 +145,11 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
         contentPadding: const EdgeInsets.all(16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -146,7 +166,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF222121),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -174,36 +194,58 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
 
   // Widget Helper: Kotak Unggah Cover
   Widget _buildUploadCoverBox() {
-    return InkWell(
-      onTap: () {
-        // Logika untuk memilih gambar dari galeri
-      },
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 180,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color(0xFF222121),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.1),
-            style: BorderStyle.solid, // Bisa diganti DottedBorder jika pakai package
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.cloud_upload_outlined, color: Colors.white.withOpacity(0.5), size: 48),
-            const SizedBox(height: 12),
-            Text(
-              'Klik untuk Unggah Cover',
-              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14),
-            ),
-          ],
+  return InkWell(
+    onTap: () async {
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          _selectedImage = File(pickedFile.path);
+        });
+
+        // simpan ke ViewModel
+        context.read<WriteStoryViewModel>().setImagePath(
+            pickedFile.path);
+      }
+    },
+    borderRadius: BorderRadius.circular(16),
+    child: Container(
+      height: 180,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFF222121),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.1),
         ),
       ),
-    );
-  }
+      child: _selectedImage == null
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.cloud_upload_outlined,
+                    color: Colors.white.withValues(alpha: 0.5), size: 48),
+                const SizedBox(height: 12),
+                Text(
+                  'Klik untuk Unggah Cover',
+                  style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.5), fontSize: 14),
+                ),
+              ],
+            )
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.file(
+                _selectedImage!,
+                width: double.infinity,
+                height: 180,
+                fit: BoxFit.cover,
+              ),
+            ),
+    ),
+  );
+}
 
   // Widget Helper: Tombol Submit dengan efek warna
   Widget _buildSubmitButton() {
@@ -230,12 +272,28 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
           ),
           elevation: WidgetStateProperty.all(0),
         ),
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            // Logika untuk menyimpan data cerita dan lanjut ke EditorScreen
+            final vm = context.read<WriteStoryViewModel>();
+
+            final prefs = await SharedPreferences.getInstance();
+            final token = prefs.getString('token');
+
+            if (token == null) {
+              print("Token tidak ditemukan");
+              return;
+            }
+
+            await vm.createStory(
+              token: token,
+              title: _titleController.text,
+              description: _descController.text,
+              genreId: 1,
+            );
+
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const EditorScreen()),
+              MaterialPageRoute(builder: (_) => const EditorScreen()),
             );
           }
         },

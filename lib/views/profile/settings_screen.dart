@@ -27,8 +27,10 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
 
-      body: Center(
-        child: Padding(
+      body: SafeArea(
+  child: SingleChildScrollView(
+    child: Center(
+      child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
 
           child: Column(
@@ -63,7 +65,7 @@ class SettingsScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              _menuButton(
+                            _menuButton(
                 text: 'Hubungkan Sosmed',
                 onTap: () {
                   Navigator.push(
@@ -78,6 +80,9 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
+    ),
+  ),
+
     );
   }
 
