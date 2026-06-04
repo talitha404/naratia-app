@@ -49,8 +49,8 @@ class _DraftListScreenState extends State<DraftListScreen> {
                 filled: true,
                 fillColor: const Color(0xFF222121),
                 hintText: 'Cari Draf...',
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 14),
-                prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.4)),
+                hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 14),
+                prefixIcon: Icon(Icons.search, color: Colors.white.withValues(alpha: 0.4)),
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25), // Gaya kapsul melengkung
@@ -69,7 +69,7 @@ class _DraftListScreenState extends State<DraftListScreen> {
                 decoration: BoxDecoration(
                   color: const Color(0xFF1C1B1B), // Background area list draf
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withOpacity(0.05)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +181,7 @@ class _DraftListScreenState extends State<DraftListScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -197,7 +197,7 @@ class _DraftListScreenState extends State<DraftListScreen> {
                   children: [
                     Text(
                       lastEdited,
-                      style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 10),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 10),
                     ),
                     // Tombol Edit Mini Kapsul
                     SizedBox(
