@@ -173,95 +173,102 @@ class _BacaScreenState extends State<BacaScreen> {
   Widget build(BuildContext context) {
     final currentChapter = _chapters.isNotEmpty ? _chapters[_currentChapterIndex] : null;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF121212),
-      appBar: AppBar(
+    return PopScope(
+      canPop: widget.isFromLibrary,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        _showSaveToLibraryDialog();
+      },
+      child: Scaffold(
         backgroundColor: const Color(0xFF121212),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-          onPressed: () => widget.isFromLibrary ? Navigator.pop(context) : _showSaveToLibraryDialog(),
-        ),
-        actions: [
-          Builder(builder: (context) => IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () => Scaffold.of(context).openEndDrawer(),
-          )),
-        ],
-      ),
-      endDrawer: Drawer(
-        backgroundColor: const Color(0xFF1E1E1E),
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              Container(
-                width: 100, height: 140,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(image: NetworkImage(widget.coverUrl), fit: BoxFit.cover),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(widget.storyTitle, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
-              const Divider(color: Colors.white10, height: 30, thickness: 1),
-              Expanded(
-                child: _chapters.isEmpty ? const Center(child: Text("Tidak ada bab", style: TextStyle(color: Colors.grey))) : ListView.builder(
-                  itemCount: _chapters.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text("Bab ${_chapters[index]['chapter_number']} | ${_chapters[index]['title']}",
-                        style: TextStyle(color: _currentChapterIndex == index ? const Color(0xFF610094) : Colors.white70, fontWeight: _currentChapterIndex == index ? FontWeight.bold : FontWeight.normal),
-                      ),
-                      onTap: () {
-                        setState(() => _currentChapterIndex = index);
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF121212),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+            onPressed: () => widget.isFromLibrary ? Navigator.pop(context) : _showSaveToLibraryDialog(),
           ),
+          actions: [
+            Builder(builder: (context) => IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            )),
+          ],
         ),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.purple))
-          : Column(
+        endDrawer: Drawer(
+          backgroundColor: const Color(0xFF1E1E1E),
+          child: SafeArea(
+            child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text("${currentChapter?['title'] ?? ''}".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-                    child: Text(currentChapter?['content'] ?? 'Tidak ada teks isi bab.', style: const TextStyle(color: Colors.white70, fontSize: 16, height: 1.8), textAlign: TextAlign.justify),
+                const SizedBox(height: 20),
+                Container(
+                  width: 100, height: 140,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(image: NetworkImage(widget.coverUrl), fit: BoxFit.cover),
                   ),
                 ),
-                Container(
-                  height: 65,
-                  decoration: const BoxDecoration(color: Color(0xFF610094)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        icon: Icon(_isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.white),
-                        onPressed: () async {
-                          setState(() => _isLiked = !_isLiked);
-                          await _apiService.toggleLike(token: widget.token, storyId: widget.storyId);
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(widget.storyTitle, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+                const Divider(color: Colors.white10, height: 30, thickness: 1),
+                Expanded(
+                  child: _chapters.isEmpty ? const Center(child: Text("Tidak ada bab", style: TextStyle(color: Colors.grey))) : ListView.builder(
+                    itemCount: _chapters.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text("Bab ${_chapters[index]['chapter_number']} | ${_chapters[index]['title']}",
+                          style: TextStyle(color: _currentChapterIndex == index ? const Color(0xFF610094) : Colors.white70, fontWeight: _currentChapterIndex == index ? FontWeight.bold : FontWeight.normal),
+                        ),
+                        onTap: () {
+                          setState(() => _currentChapterIndex = index);
+                          Navigator.pop(context);
                         },
-                      ),
-                      IconButton(icon: const Icon(Icons.chat_bubble_outline, color: Colors.white), onPressed: _showCommentBottomSheet),
-                      IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () => Share.share("Baca ${widget.storyTitle} di Naratia!")),
-                    ],
+                      );
+                    },
                   ),
                 ),
               ],
             ),
+          ),
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator(color: Colors.purple))
+            : Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text("${currentChapter?['title'] ?? ''}".toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                      child: Text(currentChapter?['content'] ?? 'Tidak ada teks isi bab.', style: const TextStyle(color: Colors.white70, fontSize: 16, height: 1.8), textAlign: TextAlign.justify),
+                    ),
+                  ),
+                  Container(
+                    height: 65,
+                    decoration: const BoxDecoration(color: Color(0xFF610094)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: Icon(_isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.white),
+                          onPressed: () async {
+                            setState(() => _isLiked = !_isLiked);
+                            await _apiService.toggleLike(token: widget.token, storyId: widget.storyId);
+                          },
+                        ),
+                        IconButton(icon: const Icon(Icons.chat_bubble_outline, color: Colors.white), onPressed: _showCommentBottomSheet),
+                        IconButton(icon: const Icon(Icons.share, color: Colors.white), onPressed: () => Share.share("Baca ${widget.storyTitle} di Naratia!")),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }
