@@ -1,6 +1,4 @@
 // isi metadata cerita
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'editor_screen.dart';
@@ -24,7 +22,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
   final TextEditingController _descController = TextEditingController();
   String? _selectedGenre;
   File? _selectedImage;
-final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
 
   // Daftar Genre (Contoh)
   final List<String> _genres = ['Romance', 'Fantasy', 'Horror', 'Sci-Fi', 'Action', 'Mystery'];
@@ -53,6 +51,8 @@ final ImagePicker _picker = ImagePicker();
       ),
       centerTitle: true,
     ),
+
+    // Body dengan Form Input
     body: SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
@@ -243,9 +243,9 @@ final ImagePicker _picker = ImagePicker();
                 fit: BoxFit.cover,
               ),
             ),
-    ),
-  );
-}
+          ),
+        );
+      }
 
   // Widget Helper: Tombol Submit dengan efek warna
   Widget _buildSubmitButton() {
@@ -273,30 +273,46 @@ final ImagePicker _picker = ImagePicker();
           elevation: WidgetStateProperty.all(0),
         ),
         onPressed: () async {
-          if (_formKey.currentState!.validate()) {
-            final vm = context.read<WriteStoryViewModel>();
+        if (_formKey.currentState!.validate()) {
+          final vm = context.read<WriteStoryViewModel>();
 
-            final prefs = await SharedPreferences.getInstance();
-            final token = prefs.getString('token');
+          final prefs = await SharedPreferences.getInstance();
+          final token = prefs.getString('token');
 
-            if (token == null) {
-              print("Token tidak ditemukan");
-              return;
-            }
+          if (token == null) {
+            debugPrint("Token tidak ditemukan");
+            return;
+          }
 
-            await vm.createStory(
+          try {
+            // 1. CREATE STORY
+            final storyId = await vm.createStory(
               token: token,
               title: _titleController.text,
               description: _descController.text,
               genreId: 1,
             );
 
+            // 2. CREATE CHAPTER 1 (pakai method baru)
+            await vm.createChapter(
+              token: token,
+              storyId: storyId,
+              title: "Bab 1",
+              content: "",
+            );
+
+            // 3. NAVIGATE KE EDITOR
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const EditorScreen()),
             );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Gagal: $e")),
+            );
           }
-        },
+        }
+      },
         child: const Text(
           'Lanjutkan Menulis',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

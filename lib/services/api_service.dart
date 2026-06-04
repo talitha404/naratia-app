@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -15,7 +16,10 @@ class ApiService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode({'email': email, 'password': password}),
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
       );
 
       if (response.statusCode == 200) {
@@ -28,90 +32,92 @@ class ApiService {
     }
   }
 
-static Future<bool> register(
-  String username,
-  String email,
-  String password,
-) async {
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/register'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode({
-        'username': username,
-        'email': email,
-        'password': password,
-        'password_confirmation': password,
-      }),
-    );
+  static Future<bool> register(
+    String username,
+    String email,
+    String password,
+  ) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/register'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'username': username,
+          'email': email,
+          'password': password,
+          'password_confirmation': password,
+        }),
+      );
 
-    print('REGISTER STATUS: ${response.statusCode}');
-    print('REGISTER BODY: ${response.body}');
+      print('REGISTER STATUS: ${response.statusCode}');
+      print('REGISTER BODY: ${response.body}');
 
-    return response.statusCode == 200 ||
-        response.statusCode == 201;
-  } catch (e) {
-    print('REGISTER ERROR: $e');
-    return false;
-  }
-}
-
-static Future<Map<String, dynamic>?> updateProfile(
-  String token,
-  String username,
-  String name,
-  String bio,
-) async {
-  final response = await http.put(
-    Uri.parse('$baseUrl/profile'),
-    headers: {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-    },
-    body: {
-      'username': username,
-      'name': name,
-      'bio': bio,
-    },
-  );
-
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
+      return response.statusCode == 200 ||
+          response.statusCode == 201;
+    } catch (e) {
+      print('REGISTER ERROR: $e');
+      return false;
+    }
   }
 
-  return null;
-}
-
-static Future<bool> sendFeedback(
-  String token,
-  String message,
-) async {
-  try {
-    final response = await http.post(
-      Uri.parse('$baseUrl/feedback'),
+  static Future<Map<String, dynamic>?> updateProfile(
+    String token,
+    String username,
+    String name,
+    String bio,
+  ) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/profile'),
       headers: {
         'Authorization': 'Bearer $token',
         'Accept': 'application/json',
       },
       body: {
-        'message': message,
+        'username': username,
+        'name': name,
+        'bio': bio,
       },
     );
 
-    print('FEEDBACK STATUS: ${response.statusCode}');
-    print('FEEDBACK BODY: ${response.body}');
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
 
-    return response.statusCode == 200;
-  } catch (e) {
-    print('FEEDBACK ERROR: $e');
-    return false;
+    return null;
   }
-}
 
-  static Future<Map<String, dynamic>?> getUser(String token) async {
+  static Future<bool> sendFeedback(
+    String token,
+    String message,
+  ) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/feedback'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+        body: {
+          'message': message,
+        },
+      );
+
+      print('FEEDBACK STATUS: ${response.statusCode}');
+      print('FEEDBACK BODY: ${response.body}');
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print('FEEDBACK ERROR: $e');
+      return false;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getUser(
+    String token,
+  ) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/user'),
@@ -152,7 +158,8 @@ static Future<bool> sendFeedback(
         }),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201) {
         return jsonDecode(response.body);
       }
 
@@ -186,13 +193,41 @@ static Future<bool> sendFeedback(
         }),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201) {
         return jsonDecode(response.body);
       }
 
       return null;
     } catch (e) {
       print('CREATE CHAPTER ERROR: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getChapter({
+    required String token,
+    required int chapterId,
+  }) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/chapters/$chapterId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+
+      debugPrint(
+        'Get Chapter gagal: ${response.statusCode}',
+      );
+      return null;
+    } catch (e) {
+      debugPrint('Get Chapter error: $e');
       return null;
     }
   }
@@ -228,4 +263,166 @@ static Future<bool> sendFeedback(
     }
   }
 
+  // 📖 Beranda
+  Future<List<dynamic>?> fetchStories(
+    String token,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/stories'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('FETCH STORIES ERROR: $e');
+      return null;
+    }
+  }
+
+  // 📑 Daftar Bab
+  Future<List<dynamic>?> fetchChapters(
+    int storyId,
+    String token,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/stories/$storyId/chapters'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('FETCH CHAPTERS ERROR: $e');
+      return null;
+    }
+  }
+
+  // 💬 Komentar
+  Future<List<dynamic>?> fetchComments(
+    int storyId,
+    String token,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/stories/$storyId/comments'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('FETCH COMMENTS ERROR: $e');
+      return null;
+    }
+  }
+
+  // ✍️ Tambah Komentar
+  Future<dynamic> storeComment({
+    required String token,
+    required int storyId,
+    required String content,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/comments'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'story_id': storyId,
+          'content': content,
+        }),
+      );
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('STORE COMMENT ERROR: $e');
+      return null;
+    }
+  }
+
+  // ❤️ Like
+  Future<Map<String, dynamic>?> toggleLike({
+    required String token,
+    required int storyId,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/likes/toggle'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'story_id': storyId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+
+      return null;
+    } catch (e) {
+      print('TOGGLE LIKE ERROR: $e');
+      return null;
+    }
+  }
+
+  // 📚 Bookmark
+  Future<bool> addToLibrary({
+    required String token,
+    required int storyId,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/bookmarks'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'story_id': storyId,
+        }),
+      );
+
+      print('ADD TO LIBRARY STATUS: ${response.statusCode}');
+
+      return response.statusCode == 200 ||
+          response.statusCode == 201;
+    } catch (e) {
+      print('ADD TO LIBRARY ERROR: $e');
+      return false;
+    }
+  }
 }
