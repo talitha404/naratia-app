@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/chapter.dart';
 import '../services/api_service.dart';
 
 class WriteStoryViewModel extends ChangeNotifier {
@@ -8,6 +9,8 @@ class WriteStoryViewModel extends ChangeNotifier {
 
   int? currentStoryId;
 
+  Chapter? currentChapter;
+
   String? selectedImagePath;
 
   void setImagePath(String path) {
@@ -15,45 +18,55 @@ class WriteStoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ===============================
-  // CREATE STORY
-  // ===============================
-  Future<bool> createStory({
+  // CREATE STORY (FIXED)
+  Future<int> createStory({
     required String token,
     required String title,
-    required String description,
-    required int? genreId,
+    String? description,
+    int? genreId,
   }) async {
     isLoading = true;
     notifyListeners();
 
-    final response = await _api.createStory(
-      token: token,
-      title: title,
-      description: description,
-      genreId: genreId,
-    );
+    try {
+      final response = await _api.createStory(
+        token: token,
+        title: title,
+        description: description,
+        genreId: genreId,
+      );
 
-    isLoading = false;
-    notifyListeners();
+      print("RESPONSE: $response");
 
-    if (response != null && response['data'] != null) {
-      currentStoryId = response['data']['id'];
-      return true;
+      int? id;
+
+      if (response['data']?['id'] != null) {
+        id = response['data']['id'];
+      } else if (response['id'] != null) {
+        id = response['id'];
+      } else if (response['story']?['id'] != null) {
+        id = response['story']['id'];
+      }
+
+      if (id == null) {
+        throw Exception("ID tidak ditemukan: $response");
+      }
+
+      currentStoryId = id;
+      return id;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    return false;
   }
-
-  // ===============================
-  // CREATE / AUTO SAVE CHAPTER
-  // ===============================
-  Future<bool> saveChapter({
+  
+  // CREATE CHAPTER (FIXED)
+  Future<Chapter> createChapter({
     required String token,
     required int storyId,
-    required int chapterNumber,
     required String title,
     required String content,
+    int chapterNumber = 1,
   }) async {
     final response = await _api.createChapter(
       token: token,
@@ -63,25 +76,52 @@ class WriteStoryViewModel extends ChangeNotifier {
       content: content,
     );
 
-    return response != null;
+    if (response != null && response['data'] != null) {
+      final chapter = Chapter.fromJson(response['data']);
+
+      currentChapter = chapter;
+      notifyListeners();
+
+      return chapter;
+    }
+
+    throw Exception("Gagal membuat chapter");
   }
 
-  // ===============================
-  // UPDATE CHAPTER
-  // ===============================
-  Future<bool> updateChapter({
+  
+  // AUTO SAVE (IMPROVED)
+  
+  Future<void> autoSave({
     required String token,
-    required int chapterId,
-    required String title,
     required String content,
   }) async {
-    final response = await _api.updateChapter(
-      token: token,
-      chapterId: chapterId,
-      title: title,
-      content: content,
-    );
+    if (currentChapter == null) {
+      debugPrint("AutoSave dibatalkan: chapter belum ada");
+      return;
+    }
 
-    return response != null;
+    // update local state dulu (optimistic update)
+    currentChapter = currentChapter!.copyWith(content: content);
+
+    try {
+      await _api.updateChapter(
+        token: token,
+        chapterId: currentChapter!.id,
+        title: currentChapter!.title,
+        content: content,
+      );
+    } catch (e) {
+      debugPrint("AutoSave error: $e");
+    }
+  }
+
+  
+  // UPDATE TITLE
+  
+  void updateChapterTitle(String title) {
+    if (currentChapter == null) return;
+
+    currentChapter = currentChapter!.copyWith(title: title);
+    notifyListeners();
   }
 }

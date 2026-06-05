@@ -137,11 +137,23 @@ class ApiService {
     }
   }
 
-  Future<dynamic> createStory({
+  Future<List<dynamic>> getGenres(String token) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/genres'),
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    },
+  );
+
+  return jsonDecode(response.body);
+}
+
+  Future<Map<String, dynamic>> createStory({
     required String token,
     required String title,
-    required String description,
-    required int? genreId,
+    String? description,
+    int? genreId,
   }) async {
     try {
       final response = await http.post(
@@ -153,24 +165,29 @@ class ApiService {
         },
         body: jsonEncode({
           'title': title,
-          'description': description,
-          'genre_id': genreId,
+          if (description != null && description.isNotEmpty)
+            'description': description,
+          if (genreId != null) 'genre_id': genreId,
         }),
       );
 
-      if (response.statusCode == 200 ||
-          response.statusCode == 201) {
-        return jsonDecode(response.body);
-      }
+      print("STATUS: ${response.statusCode}");
+      print("BODY: ${response.body}");
 
-      return null;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception(
+          "Failed: ${response.statusCode} - ${response.body}",
+        );
+      }
     } catch (e) {
       print('CREATE STORY ERROR: $e');
-      return null;
+      rethrow;
     }
   }
 
-  Future<dynamic> createChapter({
+  Future<Map<String, dynamic>> createChapter({
     required String token,
     required int storyId,
     required int chapterNumber,
@@ -193,15 +210,17 @@ class ApiService {
         }),
       );
 
-      if (response.statusCode == 200 ||
-          response.statusCode == 201) {
+      print("CHAPTER STATUS: ${response.statusCode}");
+      print("CHAPTER BODY: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.body);
       }
 
-      return null;
+      throw Exception("Create chapter failed: ${response.body}");
     } catch (e) {
       print('CREATE CHAPTER ERROR: $e');
-      return null;
+      rethrow;
     }
   }
 
