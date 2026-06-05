@@ -22,30 +22,42 @@ class WriteStoryViewModel extends ChangeNotifier {
   Future<int> createStory({
     required String token,
     required String title,
-    required String description,
-    required int genreId,
+    String? description,
+    int? genreId,
   }) async {
     isLoading = true;
     notifyListeners();
 
-    final response = await _api.createStory(
-      token: token,
-      title: title,
-      description: description,
-      genreId: genreId,
-    );
+    try {
+      final response = await _api.createStory(
+        token: token,
+        title: title,
+        description: description,
+        genreId: genreId,
+      );
 
-    isLoading = false;
-    notifyListeners();
+      print("RESPONSE: $response");
 
-    if (response != null && response['data'] != null) {
-      final id = response['data']['id'] as int;
+      int? id;
+
+      if (response['data']?['id'] != null) {
+        id = response['data']['id'];
+      } else if (response['id'] != null) {
+        id = response['id'];
+      } else if (response['story']?['id'] != null) {
+        id = response['story']['id'];
+      }
+
+      if (id == null) {
+        throw Exception("ID tidak ditemukan: $response");
+      }
+
       currentStoryId = id;
       return id;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    //lempar error
-    throw Exception("Gagal membuat story");
   }
   
   // CREATE CHAPTER (FIXED)

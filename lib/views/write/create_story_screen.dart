@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/write_story_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../services/api_service.dart';
 
 class CreateStoryScreen extends StatefulWidget {
   const CreateStoryScreen({super.key});
@@ -16,16 +17,51 @@ class CreateStoryScreen extends StatefulWidget {
 
 class _CreateStoryScreenState extends State<CreateStoryScreen> {
   final _formKey = GlobalKey<FormState>();
-  
-  // Controller untuk mengambil data input
+
+  // Controller
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  String? _selectedGenre;
+
+  int? _selectedGenreId;
+
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
 
-  // Daftar Genre (Contoh)
-  final List<String> _genres = ['Romance', 'Fantasy', 'Horror', 'Sci-Fi', 'Action', 'Mystery'];
+  // 🔥 STATE GENRES DARI API
+  List<dynamic> _genres = [];
+  bool isLoadingGenres = true;
+
+  bool isSubmitting = false;
+
+  // =========================
+  // 🔥 INIT STATE
+  // =========================
+  @override
+  void initState() {
+    super.initState();
+    fetchGenres();
+  }
+
+  // =========================
+  // 🔥 FETCH GENRES
+  // =========================
+  Future<void> fetchGenres() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+
+    final response = await ApiService().getGenres(token);
+
+    setState(() {
+      _genres = response; // ✅ langsung assign
+      isLoadingGenres = false;
+    });
+
+  } catch (e) {
+    print("ERROR FETCH GENRES: $e");
+    setState(() => isLoadingGenres = false);
+  }
+}
 
   @override
   void dispose() {
@@ -34,6 +70,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     super.dispose();
   }
 
+  //dibawah ini sudah ui panjang
   @override
   Widget build(BuildContext context) {
   return Scaffold(
@@ -161,30 +198,53 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
 
   // Widget Helper: Dropdown Genre
   Widget _buildDropdownField() {
+    if (isLoadingGenres) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: const Color(0xFF222121),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedGenre,
-          dropdownColor: const Color(0xFF222121),
-          hint: const Text('Pilih Genre', style: TextStyle(color: Colors.grey, fontSize: 14)),
-          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+        child: DropdownButton<int>(
+          value: _genres.any((g) => g['genre_id'] == _selectedGenreId)
+              ? _selectedGenreId
+              : null,
           isExpanded: true,
-          style: const TextStyle(color: Colors.white),
-          items: _genres.map((String genre) {
-            return DropdownMenuItem<String>(
-              value: genre,
-              child: Text(genre),
+          dropdownColor: const Color(0xFF222121),
+
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+          ),
+
+          hint: const Text(
+            'Pilih Genre',
+            style: TextStyle(color: Colors.grey),
+          ),
+
+          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+
+          items: _genres.map<DropdownMenuItem<int>>((genre) {
+            return DropdownMenuItem<int>(
+              value: genre['genre_id'],
+              child: Text(
+                genre['name'],
+                style: const TextStyle(color: Colors.white),
+              ),
             );
           }).toList(),
+
           onChanged: (value) {
             setState(() {
-              _selectedGenre = value;
+              _selectedGenreId = value;
             });
           },
         ),
