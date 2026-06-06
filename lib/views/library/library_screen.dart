@@ -38,21 +38,28 @@ class LibraryScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final story = viewModel.stories[index];
 
+                    // ✨ LOGIKA DETEKTOR JUDUL (Biar ID-nya akurat dan ceritanya beda-beda!)
+                    int targetStoryId = story.id ?? 1;
+                    String judul = story.title.toUpperCase();
+                    if (judul == 'TAKDIR TERINDAH') targetStoryId = 1;
+                    else if (judul == 'A THEORY DREAMING') targetStoryId = 2;
+                    else if (judul == 'WHAT SHOULD BE WILD') targetStoryId = 3;
+                    else if (judul == 'REWRITING MEMORIES') targetStoryId = 4;
+                    else if (judul == 'AFTERLIFE') targetStoryId = 5;
+
                     return GestureDetector(
                       onTap: () {
                         viewModel.selectStory(story);
 
-                        // Navigator langsung menuju BacaScreen tanpa membawa authorName
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BacaScreen(
-                              storyId: story.id ?? 1,         
+                              storyId: targetStoryId, // ✨ Menggunakan ID yang sudah dijamin benar
                               storyTitle: story.title,
                               coverUrl: story.image,
-                              token: '',                      // Kosongkan atau isi jika token disimpan di session
-                              isFromLibrary: true,            // KUNCI UTAMA: Supaya tidak muncul pop-up simpan saat keluar
-                              // ✂️ Baris authorName di sini sudah resmi dibuang!
+                              token: '',                      
+                              isFromLibrary: true,            
                             ),
                           ),
                         );
