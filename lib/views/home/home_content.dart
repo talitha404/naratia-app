@@ -142,7 +142,6 @@ class _HomeContentState extends State<HomeContent> {
               ),
               const SizedBox(height: 12),
 
-              // ✨ INI TERSANGKANYA! Tingginya sudah aku kembalikan jadi 185 biar gak sesak
               SizedBox(
                 height: 185, 
                 child: Consumer<LibraryViewModel>(
@@ -165,10 +164,12 @@ class _HomeContentState extends State<HomeContent> {
               const SizedBox(height: 8),
 
               const Text('Bacaan trending', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
+              
+              const SizedBox(height: 4),
 
               if (trendingStories.isNotEmpty) ...[
                 GridView.builder(
+                  padding: EdgeInsets.zero, 
                   shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 16, mainAxisSpacing: 16, childAspectRatio: 0.72),
                   itemCount: trendingStories.length,
