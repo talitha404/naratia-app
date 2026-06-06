@@ -78,7 +78,7 @@ class WriteStoryViewModel extends ChangeNotifier {
       content: content,
     );
 
-    if (response != null && response['data'] != null) {
+    if (response['data'] != null) {
       final chapter = Chapter.fromJson(response['data']);
 
       currentChapter = chapter;

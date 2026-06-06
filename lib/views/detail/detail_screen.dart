@@ -7,6 +7,7 @@ class DetailScreen extends StatelessWidget {
   final String title;
   final String imagePath;
   final String authorName;
+  final String synopsis; 
   final String token;
   final bool isFromLibrary; 
 
@@ -14,6 +15,7 @@ class DetailScreen extends StatelessWidget {
     super.key, 
     required this.title, 
     required this.imagePath,
+    this.synopsis = 'Tidak ada sinopsis.', 
     this.storyId = 1,              
     this.authorName = 'Layla.one',   
     this.token = '',                
@@ -40,35 +42,13 @@ class DetailScreen extends StatelessWidget {
             // Cover Buku
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: imagePath.startsWith('http')
-                  ? Image.network(
-                      imagePath,
-                      height: 200,
-                      width: 140,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 200,
-                          width: 140,
-                          color: Colors.grey[900],
-                          child: const Icon(Icons.broken_image, color: Colors.white54),
-                        );
-                      },
-                    )
-                  : Image.asset(
-                      imagePath,
-                      height: 200,
-                      width: 140,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 200,
-                          width: 140,
-                          color: Colors.grey[900],
-                          child: const Icon(Icons.broken_image, color: Colors.white54),
-                        );
-                      },
-                    ),
+              // ✨ PAKAI ASSET LOKAL SAJA BIAR PASTI MUNCUL DI EMULATOR
+              child: Image.asset(
+                'assets/images/book5.png', 
+                height: 200,
+                width: 140,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(height: 24),
             
@@ -82,7 +62,7 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // ✨ PENULIS TETAP TAMPIL DI SINI (Statik & Gak Bisa Diklik)
+            // Penulis
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -108,10 +88,10 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Sinopsis
-            const Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-              style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
+            // Sinopsis Dinamis
+            Text(
+              synopsis, 
+              style: const TextStyle(color: Colors.white70, fontSize: 14, height: 1.5),
               textAlign: TextAlign.justify,
             ),
             const SizedBox(height: 32),
@@ -129,7 +109,7 @@ class DetailScreen extends StatelessWidget {
                         builder: (context) => BacaScreen(
                           storyId: storyId,
                           storyTitle: title,
-                          coverUrl: imagePath, // ✂️ Parameter authorName udah sukses dibuang dari sini!
+                          coverUrl: imagePath,
                           token: token,
                         ),
                       ),

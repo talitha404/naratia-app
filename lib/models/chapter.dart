@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class Chapter {
   final int id;
