@@ -64,8 +64,7 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(viewModel),
-                  const SizedBox(height: 20),
+                  // ✨ BAGIAN HEADER (NARATIA & LONCENG) SUDAH DIHAPUS TOTAL DI SINI BIAR LANGSUNG NAIK
                   _buildSearchBar(viewModel),
                   const SizedBox(height: 30),
                   _buildDynamicContent(viewModel),
@@ -75,52 +74,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildHeader(SearchViewModel viewModel) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            if (viewModel.currentState != SearchState.initial)
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: 22,
-                ),
-                padding: const EdgeInsets.only(right: 12),
-                constraints: const BoxConstraints(),
-                onPressed: () {
-                  _searchController.clear();
-                  viewModel.resetSearch();
-                  _searchFocusNode.unfocus();
-                },
-              ),
-            const Text(
-              'NARATIA',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1.0,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-        IconButton(
-          icon: const Icon(
-            Icons.notifications_none,
-            color: Colors.white,
-            size: 22,
-          ),
-          onPressed: () {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen()));
-          },
-        ),
-      ],
     );
   }
 
@@ -442,6 +395,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       fontSize: 14,
                     ),
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
