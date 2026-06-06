@@ -39,7 +39,7 @@ class _DraftListScreenState extends State<DraftListScreen> {
       ),
       body: Column(
         children: [
-          // 1. Kolom Pencarian (Search Bar) sesuai di Figma
+          // 1. Kolom Pencarian (Search Bar)
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -84,7 +84,7 @@ class _DraftListScreenState extends State<DraftListScreen> {
                     ),
                     const SizedBox(height: 16),
                     
-                    // Card Draf: Kisah Cinta ANDROMEDA
+                    //  UI DUMMY Card Draf: Kisah Cinta ANDROMEDA
                     _buildDraftCard(
                       imageUrl: 'https://via.placeholder.com/150', // Bisa diganti aset cover lokal kamu
                       title: 'Kisah Cinta ANDROMEDA',
