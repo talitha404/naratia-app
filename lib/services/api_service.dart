@@ -282,6 +282,27 @@ class ApiService {
     }
   }
 
+  Future<void> updateStory({
+    required String token,
+    required int storyId,
+    required String status,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/stories/$storyId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'status': status,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception("Gagal update story");
+    }
+  }
+
   // 📖 Beranda
   Future<List<dynamic>?> fetchStories(
     String token,

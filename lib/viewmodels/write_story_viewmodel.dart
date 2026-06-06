@@ -24,6 +24,7 @@ class WriteStoryViewModel extends ChangeNotifier {
     required String title,
     String? description,
     int? genreId,
+    // required String status,
   }) async {
     isLoading = true;
     notifyListeners();
@@ -34,6 +35,7 @@ class WriteStoryViewModel extends ChangeNotifier {
         title: title,
         description: description,
         genreId: genreId,
+        // status: status,
       );
 
       print("RESPONSE: $response");
@@ -88,9 +90,41 @@ class WriteStoryViewModel extends ChangeNotifier {
     throw Exception("Gagal membuat chapter");
   }
 
-  
+  Future<void> updateStoryStatus({
+    required String token,
+    required int storyId,
+    required String status,
+  }) async {
+    await _api.updateStory(
+      token: token,
+      storyId: storyId,
+      status: status,
+    );
+  }
+
+  Future<void> updateStory({
+    required String token,
+    required int storyId,
+    required String status,
+  }) async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      await _api.updateStory(
+        token: token,
+        storyId: storyId,
+        status: status,
+      );
+    } catch (e) {
+      throw Exception("Gagal update story: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   // AUTO SAVE (IMPROVED)
-  
   Future<void> autoSave({
     required String token,
     required String content,
@@ -102,7 +136,6 @@ class WriteStoryViewModel extends ChangeNotifier {
 
     // update local state dulu (optimistic update)
     currentChapter = currentChapter!.copyWith(content: content);
-
     try {
       await _api.updateChapter(
         token: token,
@@ -117,11 +150,11 @@ class WriteStoryViewModel extends ChangeNotifier {
 
   
   // UPDATE TITLE
-  
   void updateChapterTitle(String title) {
     if (currentChapter == null) return;
 
     currentChapter = currentChapter!.copyWith(title: title);
     notifyListeners();
   }
+
 }

@@ -46,7 +46,7 @@ class _PublishedListScreenState extends State<PublishedListScreen> {
       ),
       body: Column(
         children: [
-          // 1. Kolom Pencarian (Search Bar) - Gaya Kapsul Putih di Figma
+          // 1. Kolom Pencarian (Search Bar) 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: TextField(
@@ -86,7 +86,7 @@ class _PublishedListScreenState extends State<PublishedListScreen> {
                     ),
                   ),
                   
-                  // Item 1: Kisah Cinta ANDROMEDA
+                  // UI DUMMY Item 1: Kisah Cinta ANDROMEDA
                   _buildPublishedCard(
                     imageUrl: 'https://via.placeholder.com/150',
                     title: 'Kisah Cinta ANDROMEDA',
@@ -98,7 +98,7 @@ class _PublishedListScreenState extends State<PublishedListScreen> {
                     onMoreTap: () {},
                   ),
                   
-                  // Item 2: Cinta Dalam Bayangan
+                  // UI DUMMY Item 2: Cinta Dalam Bayangan
                   _buildPublishedCard(
                     imageUrl: 'https://via.placeholder.com/150',
                     title: 'Cinta Dalam Bayangan',
@@ -110,7 +110,7 @@ class _PublishedListScreenState extends State<PublishedListScreen> {
                     onMoreTap: () {},
                   ),
                   
-                  // Item 3: Senja di Ujung Ombak
+                  // UI DUMMY Item 3: Senja di Ujung Ombak
                   _buildPublishedCard(
                     imageUrl: 'https://via.placeholder.com/150',
                     title: 'Senja di Ujung Ombak',

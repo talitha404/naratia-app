@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../viewmodels/write_story_viewmodel.dart';
-import 'preview_screen.dart';
 
 class EditorScreen extends StatefulWidget {
   const EditorScreen({super.key});
@@ -18,6 +17,8 @@ class _EditorScreenState extends State<EditorScreen> {
 
   bool _isInitialized = false;
   String? _token;
+
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -76,22 +77,77 @@ class _EditorScreenState extends State<EditorScreen> {
     super.dispose();
   }
 
-  Future<void> _saveManually() async {
+  Future<void> _onSavePressed() async {
+    final choice = await _showPublishDialog();
+
+    if (choice == null) return; // user cancel
+
+    await _submit(choice);
+  }
+
+  Future<String?> _showPublishDialog() async {
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Simpan Cerita"),
+          content: const Text("Pilih tipe penyimpanan"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, "draft"),
+              child: const Text("Draft"),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, "publish"),
+              child: const Text("Publish"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _submit(String status) async {
     final vm = context.read<WriteStoryViewModel>();
 
     if (_token == null) return;
     if (vm.currentChapter == null) return;
 
-    await vm.autoSave(
-      token: _token!,
-      content: _contentController.text,
-    );
+    setState(() => _isSubmitting = true);
 
-    if (!mounted) return;
+    try {
+      // UPDATE CHAPTER (INI YANG PENTING)
+      await vm.autoSave(
+        token: _token!,
+        content: _contentController.text,
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Chapter berhasil disimpan")),
-    );
+      // OPTIONAL: update status story (draft/publish)
+      await vm.updateStoryStatus(
+        token: _token!,
+        storyId: vm.currentStoryId!,
+        status: status,
+      );
+
+      if (!mounted) return;
+
+      if (status == "publish") {
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Draft disimpan")),
+        );
+      }
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
   }
 
   @override
@@ -118,7 +174,7 @@ class _EditorScreenState extends State<EditorScreen> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: _saveManually,
+            onPressed: _isSubmitting ? null : _onSavePressed,
             child: const Text(
               'Simpan',
               style: TextStyle(
@@ -189,54 +245,7 @@ class _EditorScreenState extends State<EditorScreen> {
               ),
             ),
 
-      // 🔥 BOTTOM TOOLBAR
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 12,
-          bottom: MediaQuery.of(context).padding.bottom + 12,
-        ),
-        decoration: const BoxDecoration(
-          color: Color(0xFF6A1B9A),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.undo, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.redo, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.text_fields, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.check_circle_outline, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.visibility_outlined, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const PreviewScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      // BOTTOM TOOLBAR harusnya ada untuk akses cepat ke fitur seperti preview, tapi untuk sekarang kita fokus ke editor dulu
     );
   }
 }
