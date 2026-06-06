@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart'; 
 import '../../services/api_service.dart'; 
+import 'package:provider/provider.dart';
+import '../../viewmodels/profile_viewmodel.dart';
 
 class BacaScreen extends StatefulWidget {
   final int storyId;
@@ -171,7 +173,16 @@ class _BacaScreenState extends State<BacaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ✨ Langkah 1 & 2: Tangkap data profil user
+    final profileVm = context.watch<ProfileViewModel>();
+    final String namaUtama = profileVm.username.isNotEmpty ? profileVm.username : "Pembaca";
+
     final currentChapter = _chapters.isNotEmpty ? _chapters[_currentChapterIndex] : null;
+
+    // ✨ Langkah 3: Eksekusi Trik Sulap replaceAll
+    // Kita ambil teks asli, lalu pastikan itu String, lalu ganti [NAMA_USER]
+    final String teksAsli = currentChapter?['content'] ?? 'Tidak ada teks isi bab.';
+    final String teksSiapBaca = teksAsli.replaceAll('[NAMA_USER]', namaUtama);
 
     return PopScope(
       canPop: widget.isFromLibrary,
@@ -205,6 +216,7 @@ class _BacaScreenState extends State<BacaScreen> {
                   width: 100, height: 140,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
+                    // Jika cover dari DB error, bisa diganti pakai aset seperti detail_screen kalau mau
                     image: DecorationImage(image: NetworkImage(widget.coverUrl), fit: BoxFit.cover),
                   ),
                 ),
@@ -245,7 +257,12 @@ class _BacaScreenState extends State<BacaScreen> {
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-                      child: Text(currentChapter?['content'] ?? 'Tidak ada teks isi bab.', style: const TextStyle(color: Colors.white70, fontSize: 16, height: 1.8), textAlign: TextAlign.justify),
+                      // ✨ Hasil sulapan dipasang di Widget Text ini
+                      child: Text(
+                        teksSiapBaca, 
+                        style: const TextStyle(color: Colors.white70, fontSize: 16, height: 1.8), 
+                        textAlign: TextAlign.justify
+                      ),
                     ),
                   ),
                   Container(
