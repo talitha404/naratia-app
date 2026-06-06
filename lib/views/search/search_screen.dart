@@ -64,8 +64,6 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(viewModel),
-                  const SizedBox(height: 20),
                   _buildSearchBar(viewModel),
                   const SizedBox(height: 30),
                   _buildDynamicContent(viewModel),
@@ -75,52 +73,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildHeader(SearchViewModel viewModel) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            if (viewModel.currentState != SearchState.initial)
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                  size: 22,
-                ),
-                padding: const EdgeInsets.only(right: 12),
-                constraints: const BoxConstraints(),
-                onPressed: () {
-                  _searchController.clear();
-                  viewModel.resetSearch();
-                  _searchFocusNode.unfocus();
-                },
-              ),
-            const Text(
-              'NARATIA',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1.0,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-        IconButton(
-          icon: const Icon(
-            Icons.notifications_none,
-            color: Colors.white,
-            size: 22,
-          ),
-          onPressed: () {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen()));
-          },
-        ),
-      ],
     );
   }
 
@@ -369,19 +321,22 @@ class _SearchScreenState extends State<SearchScreen> {
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 20),
           children: [
-            _buildResultCard(
+            // ✨ URUTAN ASSET DIBETULIN SESUAI PERMINTAAN
+           _buildResultCard(
+              2,
               'A THEORY DREAMING',
-              'AYA_REID',
-              'Freya menyimpan rahasia kutukan...',
-              'https://picsum.photos/seed/search_result1/300/400',
+              'Luna Fawn',
+              'Freya menyimpan rahasia kutukan kuno yang bisa mengubah segalanya...',
+              'assets/images/book2.png', // Sudah benar pakai book2
               ['ROMANTIS', 'FANTASI'],
             ),
             const SizedBox(height: 12),
             _buildResultCard(
+              3,
               'WHAT SHOULD BE WILD',
-              'JULIA_FINE',
-              'Kekuatan aneh di dalam hutan...',
-              'https://picsum.photos/seed/search_result2/300/400',
+              'Kaelen Roe',
+              'Kekuatan aneh di dalam hutan terlarang mulai memanggil namanya...',
+              'assets/images/book1.png', // <-- What Should Be Wild pakai book1
               ['MISTERI'],
             ),
           ],
@@ -391,6 +346,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildResultCard(
+    int storyId,
     String title,
     String author,
     String desc,
@@ -403,9 +359,11 @@ class _SearchScreenState extends State<SearchScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => DetailScreen(
+              storyId: storyId,
               title: title,
               imagePath: imgUrl,
               authorName: author,
+              synopsis: desc,
             ),
           ),
         );
@@ -422,12 +380,19 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imgUrl,
-                width: 60,
-                height: 90,
-                fit: BoxFit.cover,
-              ),
+              child: imgUrl.startsWith('http')
+                  ? Image.network(
+                      imgUrl,
+                      width: 60,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      imgUrl,
+                      width: 60,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -442,6 +407,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       fontSize: 14,
                     ),
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
