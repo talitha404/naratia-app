@@ -131,13 +131,7 @@ class _EditorScreenState extends State<EditorScreen> {
 
       if (!mounted) return;
 
-      if (status == "publish") {
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Draft disimpan")),
-        );
-      }
+      Navigator.pop(context, status);
 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -244,8 +238,6 @@ class _EditorScreenState extends State<EditorScreen> {
                 ],
               ),
             ),
-
-      // BOTTOM TOOLBAR harusnya ada untuk akses cepat ke fitur seperti preview, tapi untuk sekarang kita fokus ke editor dulu
     );
   }
 }
