@@ -6,9 +6,10 @@ import 'views/auth/welcome_screen.dart';
 import 'viewmodels/profile_viewmodel.dart';
 import 'viewmodels/bookmark_viewmodel.dart';
 import 'viewmodels/library_viewmodel.dart';
-import 'viewmodels/search_viewmodel.dart'; // Ini baris yang baru ditambahkan
+import 'viewmodels/search_viewmodel.dart'; 
 import 'viewmodels/auth_viewmodel.dart';
 import 'viewmodels/write_story_viewmodel.dart';
+import 'viewmodels/home_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => WriteStoryViewModel(),
         ),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

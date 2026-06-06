@@ -167,7 +167,7 @@ class ApiService {
           'title': title,
           if (description != null && description.isNotEmpty)
             'description': description,
-          if (genreId != null) 'genre_id': genreId,
+          'genre_id': ?genreId,
         }),
       );
 
