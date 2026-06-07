@@ -316,30 +316,42 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        ListView(
+        ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 20),
-          children: [
-            // ✨ URUTAN ASSET DIBETULIN SESUAI PERMINTAAN
-           _buildResultCard(
-              2,
-              'A THEORY DREAMING',
-              'Luna Fawn',
-              'Freya menyimpan rahasia kutukan kuno yang bisa mengubah segalanya...',
-              'assets/images/book2.png', // Sudah benar pakai book2
-              ['ROMANTIS', 'FANTASI'],
-            ),
-            const SizedBox(height: 12),
-            _buildResultCard(
-              3,
-              'WHAT SHOULD BE WILD',
-              'Kaelen Roe',
-              'Kekuatan aneh di dalam hutan terlarang mulai memanggil namanya...',
-              'assets/images/book1.png', // <-- What Should Be Wild pakai book1
-              ['MISTERI'],
-            ),
-          ],
+          itemCount: viewModel.searchResults.length,
+          itemBuilder: (context, index) {
+            final result = viewModel.searchResults[index];
+            final title = result['title'] ?? '';
+            
+            // atur ID dan gambar otomatis berdasarkan judul
+            final storyId = title == 'A THEORY DREAMING' ? 2 : 3;
+            final imgUrl = title == 'A THEORY DREAMING' 
+                ? 'assets/images/book2.png' 
+                : 'assets/images/book1.png';
+            
+            // Menyiapkan genre list
+            List<String> tags = [];
+            if (result['genre_1'] != null && result['genre_1'].toString().isNotEmpty) {
+              tags.add(result['genre_1']);
+            }
+            if (result['genre_2'] != null && result['genre_2'].toString().isNotEmpty) {
+              tags.add(result['genre_2']);
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: _buildResultCard(
+                storyId,
+                title,
+                result['author'] ?? '',
+                result['description'] ?? '',
+                imgUrl,
+                tags,
+              ),
+            );
+          },
         ),
       ],
     );
