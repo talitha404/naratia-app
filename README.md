@@ -25,11 +25,12 @@ Yang membuat Naratia berbeda adalah fitur self insert, yaitu kemampuan untuk *me
 
 ---
 
-## 🚀 Fitur Utama yang Berhasil Dikembangkan
+## 🚀 Fitur yang Berhasil Dikembangkan
 
 * 🔐 Autentikasi (Register & Login)
 * 👤 Manajemen Profil Pengguna
 * ✍️ CRUD Cerita (Create, Read, Update, Delete)
+* 🩷 Like
 
 ---
 
@@ -37,9 +38,6 @@ Yang membuat Naratia berbeda adalah fitur self insert, yaitu kemampuan untuk *me
 
 * **Flutter** (Dart Framework)
 * **Laravel** (PHP Framework)
-* **MySQL** (Database)
-* **Laravel Sanctum** (Authentication)
-* **Postman** (API Testing)
 
 ---
 
@@ -163,10 +161,10 @@ Aplikasi ini dikembangkan oleh kelompok mahasiswa dengan pembagian tugas sebagai
 
 | Nama Lengkap | NPM | Fitur & Komponen yang Dibuat |
 | :--- | :--- | :--- |
-| **An Nisa' Fatmawati** | 24082010053 |  |
-| **Helen Risky Dwi Wahyuni** | 24082010054 |  |
-| **Talitha Nabila Candra** | 24082010061 | - Backend <br> - UI tulis beserta fiturnya |
-| **Rindi Antika Qumalasari** | 24082010064 | |
+| **An Nisa' Fatmawati** | 24082010053 | - Home <br> - Library <br> - Search <br> - UI Notifikasi  |
+| **Helen Risky Dwi Wahyuni** | 24082010054 |  - Autentikasi <br> - Manajemen User <br> |
+| **Talitha Nabila Candra** | 24082010061 | - Backend <br> - Tulis |
+| **Rindi Antika Qumalasari** | 24082010064 | - Baca <br> - Splash <br> - Like |
 
 ---
 
@@ -175,7 +173,7 @@ Aplikasi ini dikembangkan oleh kelompok mahasiswa dengan pembagian tugas sebagai
 * Frontend Flutter wajib terhubung dengan Backend  **Laravel**
 * Meski telah memakai struktur MVVM, masih banyak yang perlu dirapikan untuk pengembangan selanjutnya.
 * Pengembangan yang diharapakan terjadi di masa depan:
-  - Fitur like dan komentar
+  - Fitur komentar dan bagikan
   - Fitur bookmark
   - Fitur pengikut
   - Fitur publish cerita 
