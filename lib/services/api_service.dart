@@ -287,8 +287,8 @@ class ApiService {
     required int storyId,
     required String status,
   }) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/stories/$storyId'),
+    final response = await http.patch(
+      Uri.parse('$baseUrl/stories/$storyId/status'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -299,7 +299,7 @@ class ApiService {
     );
 
     if (response.statusCode != 200) {
-      throw Exception("Gagal update story");
+      throw Exception("Gagal update story: ${response.body}");
     }
   }
 

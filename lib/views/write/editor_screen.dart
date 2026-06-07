@@ -98,8 +98,8 @@ class _EditorScreenState extends State<EditorScreen> {
               child: const Text("Draft"),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(context, "publish"),
-              child: const Text("Publish"),
+              onPressed: () => Navigator.pop(context, "published"),
+              child: const Text("Published"),
             ),
           ],
         );
@@ -122,7 +122,7 @@ class _EditorScreenState extends State<EditorScreen> {
         content: _contentController.text,
       );
 
-      // OPTIONAL: update status story (draft/publish)
+      //Update status story (draft/publish)
       await vm.updateStoryStatus(
         token: _token!,
         storyId: vm.currentStoryId!,
@@ -131,13 +131,7 @@ class _EditorScreenState extends State<EditorScreen> {
 
       if (!mounted) return;
 
-      if (status == "publish") {
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Draft disimpan")),
-        );
-      }
+      Navigator.pop(context, status);
 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -244,8 +238,6 @@ class _EditorScreenState extends State<EditorScreen> {
                 ],
               ),
             ),
-
-      // BOTTOM TOOLBAR harusnya ada untuk akses cepat ke fitur seperti preview, tapi untuk sekarang kita fokus ke editor dulu
     );
   }
 }

@@ -27,24 +27,17 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
 
-  // 🔥 STATE GENRES DARI API
   List<dynamic> _genres = [];
   bool isLoadingGenres = true;
 
   bool isSubmitting = false;
 
-  // =========================
-  // 🔥 INIT STATE
-  // =========================
   @override
   void initState() {
     super.initState();
     fetchGenres();
   }
 
-  // =========================
-  // 🔥 FETCH GENRES
-  // =========================
   Future<void> fetchGenres() async {
   try {
     final prefs = await SharedPreferences.getInstance();
@@ -360,6 +353,8 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
               title: "Bab 1",
               content: "",
             );
+
+            await vm.fetchStories(token);
 
             // 3. NAVIGATE KE EDITOR
             Navigator.push(

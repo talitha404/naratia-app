@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import '../models/chapter.dart';
+import '../models/story.dart';
 import '../services/api_service.dart';
 
-class WriteStoryViewModel extends ChangeNotifier {
+class WriteStoryViewModel extends ChangeNotifier { //eror, belum bisa ambil data biar bisa nampilin daftar draft
   final ApiService _api = ApiService();
+
+  List<StoryModel> _allStories = [];
+
+  List<StoryModel> draftStories = [];
+  List<StoryModel> publishedStories = [];
 
   bool isLoading = false;
 
@@ -13,6 +19,9 @@ class WriteStoryViewModel extends ChangeNotifier {
 
   String? selectedImagePath;
 
+  String? errorMessage;
+
+  // SETTER UNTUK IMAGE PATH
   void setImagePath(String path) {
     selectedImagePath = path;
     notifyListeners();
@@ -62,7 +71,7 @@ class WriteStoryViewModel extends ChangeNotifier {
     }
   }
   
-  // CREATE CHAPTER (FIXED)
+  // CREATE CHAPTER
   Future<Chapter> createChapter({
     required String token,
     required int storyId,
@@ -91,16 +100,24 @@ class WriteStoryViewModel extends ChangeNotifier {
   }
 
   Future<void> updateStoryStatus({
-    required String token,
-    required int storyId,
-    required String status,
-  }) async {
+  required String token,
+  required int storyId,
+  required String status,
+}) async {
+  try {
     await _api.updateStory(
       token: token,
       storyId: storyId,
       status: status,
     );
+
+    await fetchStories(token); // paling aman
+
+  } catch (e) {
+    errorMessage = e.toString();
+    notifyListeners();
   }
+}
 
   Future<void> updateStory({
     required String token,
@@ -124,7 +141,59 @@ class WriteStoryViewModel extends ChangeNotifier {
     }
   }
 
-  // AUTO SAVE (IMPROVED)
+  // FETCH STORIES
+   Future<void> fetchStories(String token) async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final response = await _api.fetchStories(token);
+
+      if (response == null) {
+        throw Exception("Data kosong");
+      }
+
+      _allStories = (response as List)
+          .map((json) => StoryModel.fromJson(json))
+          .toList();
+
+      _splitStories();
+
+    } catch (e) {
+      errorMessage = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // FILTER STORIES MENJADI DRAFT DAN PUBLISHED
+  void _splitStories() {
+    draftStories = _allStories
+        .where((story) => story.status == "draft")
+        .toList();
+
+    publishedStories = _allStories
+        .where((story) => story.status == "published")
+        .toList();
+  }
+
+  // REFRESH STORIES
+  Future<void> refreshStories(String token) async {
+    await fetchStories(token);
+  }
+
+  //HELPERS
+  bool get hasDraft => draftStories.isNotEmpty;
+  bool get hasPublished => publishedStories.isNotEmpty;
+
+  void clearError() {
+    errorMessage = null;
+    notifyListeners();
+  }
+
+  // AUTO SAVE 
   Future<void> autoSave({
     required String token,
     required String content,
@@ -148,6 +217,14 @@ class WriteStoryViewModel extends ChangeNotifier {
     }
   }
 
+  void removeDraftLocally(int? id) {
+    if (id == null) return;
+
+    _allStories.removeWhere((s) => s.id == id);
+
+    _splitStories(); // WAJIB
+    notifyListeners();
+  }
   
   // UPDATE TITLE
   void updateChapterTitle(String title) {
@@ -156,5 +233,4 @@ class WriteStoryViewModel extends ChangeNotifier {
     currentChapter = currentChapter!.copyWith(title: title);
     notifyListeners();
   }
-
 }
