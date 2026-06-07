@@ -1,7 +1,8 @@
 ## 📚 Naratia
 
-“Kenapa kamu selalu jadi penonton di cerita orang lain?”
-“Bagaimana kalau kamu bukan cuma pembaca… tapi bagian dari cerita?”
+**“Kenapa kamu selalu jadi penonton di cerita orang lain?”**
+
+**“Bagaimana kalau kamu bukan cuma pembaca… tapi bagian dari cerita?”**
 
 Di Naratia, karakter utama adalah kamu.
 
