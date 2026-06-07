@@ -141,6 +141,17 @@ class WriteStoryViewModel extends ChangeNotifier { //eror, belum bisa ambil data
     }
   }
 
+  Future<bool> deleteStory(String token, int id) async {
+    final success = await _api.deleteStory(token, id);
+
+    if (success) {
+      draftStories.removeWhere((draft) => draft.id == id);
+      notifyListeners();
+    }
+
+    return success;
+  }
+
   // FETCH STORIES
    Future<void> fetchStories(String token) async {
     isLoading = true;

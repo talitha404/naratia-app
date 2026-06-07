@@ -303,6 +303,29 @@ class ApiService {
     }
   }
 
+  //Hapus cerita tp gk bisa
+  Future<bool> deleteStory(String token, int id) async {
+    try {
+      final response = await http.delete(
+        Uri.parse("$baseUrl/stories/$id"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print("Delete gagal: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Error delete: $e");
+      return false;
+    }
+  }
+
   // 📖 Beranda
   Future<List<dynamic>?> fetchStories(
     String token,
