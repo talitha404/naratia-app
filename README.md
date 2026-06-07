@@ -161,7 +161,7 @@ Aplikasi ini dikembangkan oleh kelompok mahasiswa dengan pembagian tugas sebagai
 
 | Nama Lengkap | NPM | Fitur & Komponen yang Dibuat |
 | :--- | :--- | :--- |
-| **An Nisa' Fatmawati** | 24082010053 | - Library <br> - Search <br> |
+takaan | **An Nisa' Fatmawati** | 24082010053 | - Perpustakaan <br> - Pencarian <br> |
 | **Helen Risky Dwi Wahyuni** | 24082010054 |  - Autentikasi <br> - Manajemen User <br> |
 | **Talitha Nabila Candra** | 24082010061 | - Backend <br> - Tulis |
 | **Rindi Antika Qumalasari** | 24082010064 | - Baca <br> - Splash <br> - Like |
