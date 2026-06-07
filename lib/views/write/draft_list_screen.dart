@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../viewmodels/write_story_viewmodel.dart';
 import 'editor_screen.dart';
 
-class DraftListScreen extends StatefulWidget { //sampe sini perlu gimana caranya buat namipilin daftar cerita draft aja, terus bisa di klik buat edit, terus bisa di hapus juga, terus ada search buat cari draftnya
+class DraftListScreen extends StatefulWidget { //sampe sini perlu gimana caranya buat namipilin daftar cerita draft milik penulisnya saja bukan semua cerita draft yang ada
   const DraftListScreen({super.key});
 
   @override
@@ -66,7 +66,6 @@ class _DraftListScreenState extends State<DraftListScreen> {
     super.dispose();
   }
 
-  //DI BAWAH INI UI
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<WriteStoryViewModel>();

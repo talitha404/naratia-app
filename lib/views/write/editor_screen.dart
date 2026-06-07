@@ -98,8 +98,8 @@ class _EditorScreenState extends State<EditorScreen> {
               child: const Text("Draft"),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(context, "publish"),
-              child: const Text("Publish"),
+              onPressed: () => Navigator.pop(context, "published"),
+              child: const Text("Published"),
             ),
           ],
         );
@@ -122,7 +122,7 @@ class _EditorScreenState extends State<EditorScreen> {
         content: _contentController.text,
       );
 
-      // OPTIONAL: update status story (draft/publish)
+      //Update status story (draft/publish)
       await vm.updateStoryStatus(
         token: _token!,
         storyId: vm.currentStoryId!,

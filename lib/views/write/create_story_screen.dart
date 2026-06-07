@@ -354,6 +354,8 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
               content: "",
             );
 
+            await vm.fetchStories(token);
+
             // 3. NAVIGATE KE EDITOR
             Navigator.push(
               context,

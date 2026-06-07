@@ -175,7 +175,7 @@ class WriteStoryViewModel extends ChangeNotifier { //eror, belum bisa ambil data
         .toList();
 
     publishedStories = _allStories
-        .where((story) => story.status == "publish")
+        .where((story) => story.status == "published")
         .toList();
   }
 

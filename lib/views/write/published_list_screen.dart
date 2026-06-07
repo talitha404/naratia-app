@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../viewmodels/write_story_viewmodel.dart';
+import 'editor_screen.dart';
 
 class PublishedListScreen extends StatefulWidget {
   const PublishedListScreen({super.key});
@@ -9,17 +14,70 @@ class PublishedListScreen extends StatefulWidget {
 
 class _PublishedListScreenState extends State<PublishedListScreen> {
   final TextEditingController _searchController = TextEditingController();
+  String? _token;
+  String? _searchQuery;
 
   @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+    _loadTokenAndFetchPublished();
+  }
+
+  Future<void> _loadTokenAndFetchPublished() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('token');
+
+    if (!mounted || _token == null) return;
+
+    final vm = context.read<WriteStoryViewModel>();
+    await vm.fetchStories(_token!);
+  }
+
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+    });
+  }
+
+  Future<void> _openEditor() async {
+    if (_token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Token tidak ditemukan')),
+      );
+      return;
+    }
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const EditorScreen()),
+    );
+
+    if (result != null && _token != null) {
+      final vm = context.read<WriteStoryViewModel>();
+      await vm.fetchStories(_token!);
+    }
+  }
+  
+  @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<WriteStoryViewModel>();
+
+    final filteredPublished = _searchQuery == null || _searchQuery!.isEmpty
+        ? vm.publishedStories
+        : vm.publishedStories.where((published) {
+            return published.title.toLowerCase().contains(_searchQuery!.toLowerCase());
+          }).toList();
+
     return Scaffold(
-      backgroundColor: const Color(0xFF141313), // Latar belakang gelap Naratia
+      backgroundColor: const Color(0xFF141313),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -27,37 +85,40 @@ class _PublishedListScreenState extends State<PublishedListScreen> {
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.business_center_outlined, color: Colors.white, size: 20),
-            SizedBox(width: 8),
-            Text(
-              'Cerita Terpublikasi',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        title: const Text(
+          'Cerita Terpublikasi',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
+            onPressed: () async {
+              if (_token != null) {
+                await context.read<WriteStoryViewModel>().fetchStories(_token!);
+              }
+            },
+            tooltip: 'Segarkan Cerita',
+          ),
+        ],
       ),
       body: Column(
         children: [
-          // 1. Kolom Pencarian (Search Bar) 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white, // Latar belakang putih kontras sesuai mockup
-                hintText: 'Cari Daftar Cerita ...',
-                hintStyle: TextStyle(color: Colors.black.withOpacity(0.4), fontSize: 14),
-                prefixIcon: Icon(Icons.search, color: Colors.black.withOpacity(0.5)),
+                fillColor: const Color(0xFF222121),
+                hintText: 'Cari Cerita Terpublikasi...',
+                hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 14),
+                prefixIcon: Icon(Icons.search, color: Colors.white.withValues(alpha: 0.4)),
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
@@ -66,62 +127,46 @@ class _PublishedListScreenState extends State<PublishedListScreen> {
               ),
             ),
           ),
-
-          // 2. Daftar Cerita Terpublikasi
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(4.0, 12.0, 0.0, 12.0),
-                    child: Text(
-                      'Daftar Cerita',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1C1B1B),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 16),
+                    if (vm.isLoading) ...[
+                      const Center(child: CircularProgressIndicator()),
+                      const SizedBox(height: 16),
+                    ],
+                    if (!vm.isLoading && filteredPublished.isEmpty) ...[
+                      const Text(
+                        'Tidak ada cerita terpublikasi saat ini.',
+                        style: TextStyle(color: Colors.white70, fontSize: 14),
                       ),
-                    ),
-                  ),
-                  
-                  // UI DUMMY Item 1: Kisah Cinta ANDROMEDA
-                  _buildPublishedCard(
-                    imageUrl: 'https://via.placeholder.com/150',
-                    title: 'Kisah Cinta ANDROMEDA',
-                    genre: 'Romantis',
-                    readers: '543 Pembaca',
-                    onEdit: () {},
-                    onAddBab: () {},
-                    onKarakter: () {},
-                    onMoreTap: () {},
-                  ),
-                  
-                  // UI DUMMY Item 2: Cinta Dalam Bayangan
-                  _buildPublishedCard(
-                    imageUrl: 'https://via.placeholder.com/150',
-                    title: 'Cinta Dalam Bayangan',
-                    genre: 'Romantis',
-                    readers: '1.5K Pembaca',
-                    onEdit: () {},
-                    onAddBab: () {},
-                    onKarakter: () {},
-                    onMoreTap: () {},
-                  ),
-                  
-                  // UI DUMMY Item 3: Senja di Ujung Ombak
-                  _buildPublishedCard(
-                    imageUrl: 'https://via.placeholder.com/150',
-                    title: 'Senja di Ujung Ombak',
-                    genre: 'Kehidupan',
-                    readers: '1.9K Pembaca',
-                    onEdit: () {},
-                    onAddBab: () {},
-                    onKarakter: () {},
-                    onMoreTap: () {},
-                  ),
-                ],
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Publikasikan draft untuk melihat cerita di sini.',
+                        style: TextStyle(color: Colors.white38, fontSize: 12),
+                      ),
+                    ],
+                    if (!vm.isLoading)
+                      ...filteredPublished.map((published) {
+                        return _buildPublishedCard(
+                          imageUrl: published.image.isNotEmpty ? published.image : 'https://via.placeholder.com/150',
+                          title: published.title.isNotEmpty ? published.title : 'Cerita Baru',
+                          genre: published.description.isNotEmpty ? published.description : 'Tanpa Genre',
+                          readers: 'ID: ${published.id}',
+                        );
+                      }).toList(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -130,199 +175,120 @@ class _PublishedListScreenState extends State<PublishedListScreen> {
     );
   }
 
-  // Helper Widget: Kartu Item Cerita Terpublikasi dengan 3 Tombol Aksi bawah
+  // Helper Widget: Kartu Item Cerita Terpublikasi
   Widget _buildPublishedCard({
     required String imageUrl,
     required String title,
     required String genre,
     required String readers,
-    required VoidCallback onEdit,
-    required VoidCallback onAddBab,
-    required VoidCallback onKarakter,
-    required VoidCallback onMoreTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1B1B), // Warna background card gelap lembut
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        color: const Color(0xFF242323),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Gambar Cover Mini
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imageUrl,
-                  width: 55,
-                  height: 75,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                        width: 55,
-                        height: 75,
-                        color: Colors.grey,
-                        child: Icon(
-                        Icons.image,
-                        color: Colors.white.withOpacity(0.2),
-                        ),
-                    );
-                },
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.network(
+              imageUrl,
+              width: 50,
+              height: 70,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 50,
+                  height: 70,
+                  color: Colors.grey,
+                  child: const Icon(Icons.image, color: Colors.white30, size: 20),
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              const SizedBox(width: 14),
-              
-              // Metadata Konten Atas
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    genre,
+                    style: const TextStyle(color: Colors.grey, fontSize: 10),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: onMoreTap,
-                          child: const Icon(Icons.more_vert, color: Colors.white, size: 20),
-                        ),
-                      ],
+                    Text(
+                      readers,
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 10),
                     ),
-                    const SizedBox(height: 8),
-                    
-                    // Informasi Baris Tengah: Genre & Jumlah Pembaca
                     Row(
                       children: [
-                        // Tag Genre
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2C2A2A),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.bookmark, color: Colors.grey, size: 12),
-                              const SizedBox(width: 4),
-                              Text(
-                                genre,
-                                style: const TextStyle(color: Colors.grey, fontSize: 10),
+                        SizedBox(
+                          height: 26,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF323131),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                            ],
+                            ),
+                            onPressed: () {},
+                            icon: const Icon(Icons.edit, size: 12, color: Color(0xFFBC84EE)),
+                            label: const Text('Edit', style: TextStyle(fontSize: 11)),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        // Indikator Pembaca
-                        Row(
-                          children: [
-                            const Icon(Icons.favorite, color: Colors.pinkAccent, size: 12),
-                            const SizedBox(width: 4),
-                            Text(
-                              readers,
-                              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11),
+                        const SizedBox(width: 8),
+                        SizedBox(
+                          height: 26,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF881515),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
-                          ],
+                            onPressed: () {},
+                            icon: const Icon(Icons.delete, size: 12),
+                            label: const Text('Delete', style: TextStyle(fontSize: 11)),
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          
-          // 3 Tombol Aksi di bagian bawah kartu (Sesuai elemen warna-warni di Figma)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // 1. Tombol Edit (Kombinasi Biru Gelap)
-              Expanded(
-                child: _buildActionCardButton(
-                  icon: Icons.edit,
-                  label: 'Edit',
-                  bgColor: const Color(0xFF1E293B),
-                  textColor: const Color(0xFF38BDF8),
-                  onTap: onEdit,
-                ),
-              ),
-              const SizedBox(width: 8),
-              
-              // 2. Tombol Add Bab (Kombinasi Ungu Gelap)
-              Expanded(
-                child: _buildActionCardButton(
-                  icon: Icons.add_circle_outline,
-                  label: 'Add Bab',
-                  bgColor: const Color(0xFF3B0764),
-                  textColor: const Color(0xFFC084FC),
-                  onTap: onAddBab,
-                ),
-              ),
-              const SizedBox(width: 8),
-              
-              // 3. Tombol Karakter (Kombinasi Jingga/Kuning Gelap)
-              Expanded(
-                child: _buildActionCardButton(
-                  icon: Icons.people_outline,
-                  label: 'Karakter',
-                  bgColor: const Color(0xFF451A03),
-                  textColor: const Color(0xFFFDBA74),
-                  onTap: onKarakter,
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  // Helper Widget khusus untuk menyusun 3 tombol kecil di bawah card secara presisi
-  Widget _buildActionCardButton({
-    required IconData icon,
-    required String label,
-    required Color bgColor,
-    required Color textColor,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: textColor, size: 12),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
